@@ -11,21 +11,37 @@ fn downloadFile url dest =
     client.DownloadFile url dest
 )
 
-fn checkForUpdate toolDir =
+fn checkForUpdate root =
 (
-    local versionLocal = trimRight (readFile (toolDir + "/version.txt")) "\n\r"
+    local versionLocal = trimRight (readFile (root + "/version.txt")) "\n\r"
     local remoteVersionURL = "https://raw.githubusercontent.com/full-blood/maxstack/main/version.txt"
     local versionRemote = trimRight (getRemoteText remoteVersionURL) "\n\r"
 
     if versionLocal != versionRemote then
     (
-        local updateURL = "https://raw.githubusercontent.com/full-blood/maxstack/main/main.ms"
-        downloadFile updateURL (toolDir + "/main.ms")
+        -- Mise à jour de main.ms
+        downloadFile "https://raw.githubusercontent.com/full-blood/maxstack/main/main.ms" (root + "/main.ms")
 
-        local localVersionFile = createFile (toolDir + "/version.txt")
-        format versionRemote to:localVersionFile
-        close localVersionFile
+        -- Mise à jour des scripts
+        local remoteScriptList = getRemoteText "https://raw.githubusercontent.com/full-blood/maxstack/main/scripts/list.txt"
+        local scriptsDir = root + "/scripts"
 
-        messageBox ("MaxStack a été mis à jour en version " + versionRemote)
+        for ln in filterString remoteScriptList "\n" do
+        (
+            local scriptName = trimRight ln "\r"
+            if scriptName != "" do
+            (
+                local url = "https://raw.githubusercontent.com/full-blood/maxstack/main/scripts/" + scriptName
+                local localPath = scriptsDir + "/" + scriptName
+                downloadFile url localPath
+            )
+        )
+
+        -- Mettre à jour version.txt
+        local f = createFile (root + "/version.txt")
+        format versionRemote to:f
+        close f
+
+        messageBox ("MaxStack mis à jour en version " + versionRemote)
     )
 )

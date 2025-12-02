@@ -1,6 +1,18 @@
-local toolDir = (getDir #userScripts) + "/MaxStack"
-fileIn (toolDir + "/update/update.ms")
+local root = (getDir #userScripts) + "/MaxStack"
+local scriptsDir = root + "/scripts"
 
-checkForUpdate toolDir
+-- Charger le système d'update
+fileIn (root + "/update/update.ms")
 
-messageBox "MaxStack lancé."
+-- Lancer l'update
+checkForUpdate root
+
+-- Charger tous les scripts du dossier scripts
+local files = getFiles (scriptsDir + "/*.ms")
+
+for f in files do
+(
+    try (fileIn f) catch (format "Erreur chargement script: %\n" f)
+)
+
+messageBox "MaxStack chargé."
