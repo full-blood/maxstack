@@ -4,25 +4,22 @@ try (
     if not doesFileExist root do makeDir root
     if not doesFileExist (root + "/icons") do makeDir (root + "/icons")
     if not doesFileExist (root + "/update") do makeDir (root + "/update")
+    if not doesFileExist (root + "/scripts") do makeDir (root + "/scripts")
 
-    copyFile (getSourceFileName()) (root + "/installer.ms")
+    -- Copier tous les fichiers depuis le dossier où l’installateur est lancé
+    local installerDir = getFilenamePath (getSourceFileName())
 
-    -- Fichiers principaux
-    if doesFileExist @"$installpath\main.ms" do
-        copyFile @"$installpath\main.ms" (root + "/main.ms")
+    copyFile (installerDir + "main.ms") (root + "/main.ms")
+    copyFile (installerDir + "version.txt") (root + "/version.txt")
+    copyFile (installerDir + "update/update.ms") (root + "/update/update.ms")
+    copyFile (installerDir + "icons/close.png") (root + "/icons/close.png")
 
-    if doesFileExist @"$installpath\version.txt" do
-        copyFile @"$installpath\version.txt" (root + "/version.txt")
+    -- Copier tous les scripts
+    local scripts = getFiles (installerDir + "scripts/*.ms")
+    for s in scripts do copyFile s (root + "/scripts/" + (getFilenameFile s + ".ms"))
 
-    -- Update
-    if doesFileExist @"$installpath\update\update.ms" do
-        copyFile @"$installpath\update\update.ms" (root + "/update/update.ms")
-
-    -- Icônes
-    if doesFileExist @"$installpath\icons\close.png" do
-        copyFile @"$installpath\icons\close.png" (root + "/icons/close.png")
-
-    messageBox "MaxStack installé avec succès."
-) catch (
-    messageBox "Erreur lors de l’installation."
+    messageBox "MaxStack installé."
+)
+catch (
+    messageBox "Erreur installation MaxStack."
 )
