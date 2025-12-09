@@ -1,5 +1,5 @@
-local root = (getDir #userScripts) + "/MaxStack"
-local scriptsDir = root + "/scripts"
+root = (getDir #userScripts) + "/MaxStack"
+scriptsDir = root + "/scripts"
 
 -- Charger le système d'update
 fileIn (root + "/update/update.ms")

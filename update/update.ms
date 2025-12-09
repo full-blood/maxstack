@@ -13,9 +13,9 @@ fn downloadFile url dest =
 
 fn checkForUpdate root =
 (
-    local versionLocal = trimRight (readFile (root + "/version.txt")) "\n\r"
-    local remoteVersionURL = "https://raw.githubusercontent.com/full-blood/maxstack/main/version.txt"
-    local versionRemote = trimRight (getRemoteText remoteVersionURL) "\n\r"
+    versionLocal = trimRight (readFile (root + "/version.txt")) "\n\r"
+    remoteVersionURL = "https://raw.githubusercontent.com/full-blood/maxstack/main/version.txt"
+    versionRemote = trimRight (getRemoteText remoteVersionURL) "\n\r"
 
     if versionLocal != versionRemote then
     (
