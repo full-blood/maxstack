@@ -7,14 +7,20 @@ fn getRemoteText url =
 (
     try
     (
+        -- Force TLS 1.2 en utilisant la valeur entière 3072
+        local servicePointManager = dotNetClass "System.Net.ServicePointManager"
+        servicePointManager.SecurityProtocol = 3072
+        
         local client = dotNetObject "System.Net.WebClient"
-        client.Encoding = dotNetClass "System.Text.Encoding".UTF8
+        client.Encoding = (dotNetClass "System.Text.Encoding").UTF8
+        client.Headers.Add "User-Agent" "MaxStack-Updater" -- Requis par certains serveurs
+        
         local result = client.DownloadString url
         return result
     )
-    catch e
+    catch
     (
-        format "Erreur téléchargement texte: %\n" (e as string)
+        format "Erreur réseau (Texte) : %\n" (getCurrentException())
         return undefined
     )
 )
@@ -23,13 +29,22 @@ fn downloadFile url dest =
 (
     try
     (
+        local servicePointManager = dotNetClass "System.Net.ServicePointManager"
+        servicePointManager.SecurityProtocol = 3072
+        
         local client = dotNetObject "System.Net.WebClient"
+        client.Headers.Add "User-Agent" "MaxStack-Updater"
+        
+        -- Crée le dossier de destination s'il n'existe pas
+        local destDir = getFilenamePath dest
+        if not doesFileExist destDir do makeDir destDir
+        
         client.DownloadFile url dest
         return true
     )
-    catch e
+    catch
     (
-        format "Erreur téléchargement fichier: %\n" (e as string)
+        format "Erreur réseau (Fichier) : %\n" (getCurrentException())
         return false
     )
 )
@@ -237,7 +252,8 @@ fn checkForUpdate root silent:false =
     
     if versionRemote != undefined then
     (
-        versionRemote = trimRight versionRemote "\n\r "
+        --versionRemote = trimRight versionRemote "\n\r "
+		versionRemote = substituteString (trimRight versionRemote "\n\r ") " " ""
         format "Version distante: %\n" versionRemote
         
         local comparison = compareVersions versionRemote versionLocal
