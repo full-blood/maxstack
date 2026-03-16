@@ -149,18 +149,17 @@ echo.
 set /p dopublish=Publier sur GitHub (git add/commit/push) ? (o/n) :
 if /I not "%dopublish%"=="o" goto done
 
-set /p commitmsg=Message de commit :
-
 pushd "%~dp0"
 git add .
-git commit -m "%commitmsg%"
+git commit -m "release v%currentver%"
 git push
 popd
 
 echo.
 echo Pushed. Cree la Release sur GitHub :
-echo https://github.com/TON_USERNAME/TON_REPO/releases/new
-echo Uploade MaxStack.mzp comme asset de la release.
+echo https://github.com/full-blood/maxstack/releases/new
+echo Tag : v%currentver%
+echo Asset a uploader : MaxStack.mzp
 
 :done
 echo.

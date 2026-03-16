@@ -36,5 +36,5 @@ for fname in genericFiles do (
 ) 
  
 print "run the macro, to install it..." 
-messageBox "Maxstack v1.0.1 installed." title:"Maxstack installed." 
+messageBox "Maxstack v1.0.3 installed." title:"Maxstack installed." 
 print "-- END --" 

@@ -1,5 +1,5 @@
 name "MZP Plugin" 
-version 1.0.1 
+version 1.0.3 
  
 copy MaxStack.mnx to $temp 
 copy MaxStack_loader.ms to $temp 
