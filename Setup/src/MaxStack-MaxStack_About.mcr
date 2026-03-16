@@ -3,8 +3,8 @@ macroScript MaxStack_About category:"MaxStack" tooltip:"À propos de MaxStack"
     -- -----------------------------------------------
     -- Config
     -- -----------------------------------------------
-    local githubUser    = "TON_USERNAME"
-    local githubRepo    = "TON_REPO"
+    local githubUser    = "full-blood"
+    local githubRepo    = "maxstack"
     local branch        = "main"
     local baseRawURL    = "https://raw.githubusercontent.com/" + githubUser + "/" + githubRepo + "/" + branch + "/"
     local releasesURL   = "https://github.com/" + githubUser + "/" + githubRepo + "/releases/latest"
