@@ -1,2 +1,0 @@
-_MaxStack_Material_PasteClipboardImg.ms
-_MaxStack_Transform_Mirror.ms

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MaxMenuTransformations>
+    <SetDisplayMenuFlat MenuId="68c41af7-2350-4f06-9d0c-0d2b229359ae" IsFlat="true"/>
+    <SetDisplayMenuFlat MenuId="68c41af7-2350-4f06-9d0c-0d2b229359ae" IsFlat="false"/>
+    <DeleteItem Id="68c41af7-2350-4f06-9d0c-0d2b229359ae"/>
+    <DeleteItem Id="d0cd1cf6-4794-4101-8014-cc579835aa18"/>
+    <CreateMenuAction MenuId="b4779ebb-a6f0-4815-9777-57c01c0b584c" Id="e176f6e5-bd5a-443f-8c05-dc04cbde6146" ActionId="647394-MXS_Demo_Action_Item`Menu Demo Category"/>
+    <CreateMenuAction MenuId="b4779ebb-a6f0-4815-9777-57c01c0b584c" Id="4d53ae30-e51e-4c5f-b9ac-973562fd9c42" ActionId="647394-MXS_Demo_Action_Item`Menu Demo Category" BeforeId="e176f6e5-bd5a-443f-8c05-dc04cbde6146"/>
+    <DeleteItem Id="4d53ae30-e51e-4c5f-b9ac-973562fd9c42"/>
+    <DeleteItem Id="e176f6e5-bd5a-443f-8c05-dc04cbde6146"/>
+    <CreateMenuAction MenuId="b4779ebb-a6f0-4815-9777-57c01c0b584c" Id="aad4a683-1d07-4d85-9503-0a8952ae7159" ActionId="647394-Copitor`zOffTy Tools"/>
+    <DeleteItem Id="aad4a683-1d07-4d85-9503-0a8952ae7159"/>
+    <CreateMenuAction MenuId="b4779ebb-a6f0-4815-9777-57c01c0b584c" Id="d3cca765-e28d-4218-b5cd-6a29374c1196" ActionId="647394-Omega_Menu`Omega"/>
+    <CreateMenuAction MenuId="b4779ebb-a6f0-4815-9777-57c01c0b584c" Id="491f6b90-6f23-4fd4-9019-eb1230a11797" ActionId="647394-Omega_Menu`Omega" BeforeId="d3cca765-e28d-4218-b5cd-6a29374c1196"/>
+    <DeleteItem Id="d3cca765-e28d-4218-b5cd-6a29374c1196"/>
+    <SetDisplayMenuFlat MenuId="491f6b90-6f23-4fd4-9019-eb1230a11797" IsFlat="true"/>
+    <SetDisplayMenuFlat MenuId="491f6b90-6f23-4fd4-9019-eb1230a11797" IsFlat="false"/>
+    <SetDisplayMenuFlat MenuId="33f46333-8978-4b3c-a7ef-4db4c40ceaec" IsFlat="true"/>
+    <SetDisplayMenuFlat MenuId="33f46333-8978-4b3c-a7ef-4db4c40ceaec" IsFlat="false"/>
+    <CreateMenu ParentId="b4779ebb-a6f0-4815-9777-57c01c0b584c" MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Title="Antoine"/>
+    <MoveItem DestinationId="b4779ebb-a6f0-4815-9777-57c01c0b584c" ItemId="491f6b90-6f23-4fd4-9019-eb1230a11797"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="39aca0df-150e-4ab8-9330-c76a92757041" ActionId="647394-Macro74`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="8248a40d-c0df-489c-8b47-dc8964a603d5" ActionId="647394-QuickMenu`QuickMenu"/>
+    <DeleteItem Id="8248a40d-c0df-489c-8b47-dc8964a603d5"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="8eb445d0-50fd-4b95-9c3f-45a9828a07d5" ActionId="647394-Macro84`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="f396dc5b-2339-43b7-aa2f-59be8a7495cf" ActionId="647394-Macro35`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="1545cf8d-63a6-4700-942e-95b2262cc556" ActionId="647394-Macro36`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="592a4964-8f79-450f-ac56-8fc41bacf06e" ActionId="647394-Macro51`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="5018909e-328e-43da-857f-20917411e17a" ActionId="647394-Macro59`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="64030dcf-a5e2-4e8b-b858-a5c8d57c9b9a" ActionId="647394-Macro23`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="0d0dd4f6-1e48-4fc0-b465-0bfacf92ce9d" ActionId="647394-Macro30`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="0fc74351-5b0f-415d-a9e7-e7ea439ece83" ActionId="647394-Macro34`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="8595238b-228e-47da-b37e-b7d97479119c" ActionId="647394-Macro38`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="8cba335f-3b79-4af7-9b91-638cb3be804e" ActionId="647394-Macro41`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="4fc1710e-5e7a-4b59-9e41-f67e91d1a215" ActionId="647394-Macro60`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="1bcbfe8c-63c0-443b-81ac-a89feaa1125b" ActionId="647394-Macro49`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="aae4400a-c769-4aa6-b7df-eb9fd5f5f4ee" ActionId="647394-Macro47`DragAndDrop" BeforeId="1bcbfe8c-63c0-443b-81ac-a89feaa1125b"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="42e6e1dc-e8bc-43de-bd52-c6fd545637f2" ActionId="647394-Macro69`DragAndDrop" BeforeId="1bcbfe8c-63c0-443b-81ac-a89feaa1125b"/>
+    <MoveItem DestinationId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" ItemId="42e6e1dc-e8bc-43de-bd52-c6fd545637f2"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="dd92dcdd-98dc-44d1-9ec5-c51c119d8da4" ActionId="647394-Macro52`DragAndDrop"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="744a746d-2c2e-4335-9189-d8e8633d4709" ActionId="647394-Macro70`DragAndDrop" BeforeId="dd92dcdd-98dc-44d1-9ec5-c51c119d8da4"/>
+    <SetItemTitle Id="39aca0df-150e-4ab8-9330-c76a92757041" Title="MyTools" ResIdTitle="114dc785-0d55-45e5-ab2f-f8274f38b2a3"/>
+    <SetItemTitle Id="8eb445d0-50fd-4b95-9c3f-45a9828a07d5" Title="Quick Tools" ResIdTitle="45c139d5-cc31-430c-9fd9-ab3be11f2850"/>
+    <SetItemTitle Id="8cba335f-3b79-4af7-9b91-638cb3be804e" Title="Reset Save Clean" ResIdTitle="98203028-cf9e-4e0e-8894-eb3060728e51"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="363d3dd3-75e1-4b52-9e98-5fa541b792eb" ActionId="647394-Macro41`MyTools" BeforeId="4fc1710e-5e7a-4b59-9e41-f67e91d1a215"/>
+    <DeleteItem Id="8cba335f-3b79-4af7-9b91-638cb3be804e"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="52620fb5-f2e1-4dad-ab78-dbb758279990" ActionId="647394-Macro74`MyTools" BeforeId="8eb445d0-50fd-4b95-9c3f-45a9828a07d5"/>
+    <DeleteItem Id="39aca0df-150e-4ab8-9330-c76a92757041"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="0e1feea1-189e-42c8-87b5-8b48f3fbd264" ActionId="1840288898-4"/>
+    <DeleteItem Id="0e1feea1-189e-42c8-87b5-8b48f3fbd264"/>
+    <CreateMenuAction MenuId="dc114dbb-8130-4e6f-b1aa-389a05bcf55e" Id="40fdda4b-92a8-4e55-b9ce-11a31b3fa5e3" ActionId="647394-FP_wirecolor`Forest Pack"/>
+    <CreateMenuAction MenuId="b4779ebb-a6f0-4815-9777-57c01c0b584c" Id="74643b38-66fc-423c-978f-edd593b4ecf5" ActionId="647394-MonOutil`MonOutil" BeforeId="491f6b90-6f23-4fd4-9019-eb1230a11797"/>
+    <DeleteItem Id="74643b38-66fc-423c-978f-edd593b4ecf5"/>
+    <CreateMenuAction MenuId="b4779ebb-a6f0-4815-9777-57c01c0b584c" Id="b6a6eaad-8040-4d8f-8731-156321417db7" ActionId="647394-Omega_Menu`Omega" BeforeId="491f6b90-6f23-4fd4-9019-eb1230a11797"/>
+    <DeleteItem Id="491f6b90-6f23-4fd4-9019-eb1230a11797"/>
+    <DeleteItem Id="25b0a868-5954-4e8c-9697-2c84a412440f"/>
+    <CreateMenu ParentId="b4779ebb-a6f0-4815-9777-57c01c0b584c" MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Title="MaxStack"/>
+    <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="5b293857-69a3-4216-ac8e-8b5d6bb40c40" ActionId="647394-MaxStack_About`MaxStack"/>
+    <DeleteItem Id="25b0a868-5954-4e8c-9697-2c84a412440f"/>
+</MaxMenuTransformations>
