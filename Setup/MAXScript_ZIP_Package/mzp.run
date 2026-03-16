@@ -3,4 +3,7 @@ version 0.1
  
 copy MaxStack.mnx to $temp 
 copy MaxStack_loader.ms to $temp 
+copy MaxStack-MaxStack_About.mcr to $temp 
+copy MaxStack-MaxStack_Menu.mcr to $temp 
+copy MaxStack_PasteAsset.mcr to $temp 
 run "install_scripts.ms" 
