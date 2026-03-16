@@ -5,6 +5,7 @@
 setlocal EnableDelayedExpansion
 
 :: --- Config ---
+set repodir=%~dp0
 set srcdir=%~dp0src
 set outdir=%~dp0MAXScript_ZIP_Package
 set base=MaxStack
@@ -13,14 +14,17 @@ set count=1
 :: --- Create output folder if needed ---
 if not exist "%outdir%" mkdir "%outdir%"
 
-:: --- Lecture version (cree version.txt si absent) ---
-set versionfile=%srcdir%\version.txt
+:: --- Lecture version depuis la racine du repo ---
+set versionfile=%repodir%version.txt
 if not exist "%versionfile%" (
     echo 1.0.0> "%versionfile%"
     echo version.txt cree avec valeur 1.0.0
 )
 set /p currentver=<"%versionfile%"
 echo Version actuelle : %currentver%
+
+:: --- Copie version.txt vers outdir pour inclusion dans le MZP ---
+copy /Y "%versionfile%" "%outdir%\version.txt" >nul
 
 :: --- Generate mzp.run ---
 set runfile=%outdir%\mzp.run
@@ -52,17 +56,17 @@ echo mzp.run generated.
 
 :: --- Generate install_scripts.ms dynamically ---
 set installfile=%outdir%\install_scripts.ms
+set max2026scripts=C:\\Users\\
 
 echo -- clearListener() > "%installfile%"
 echo print "install maxstack menu..." >> "%installfile%"
 echo. >> "%installfile%"
 echo tempDir = GetDir #temp >> "%installfile%"
 echo userMacroDir = GetDir #userMacros >> "%installfile%"
-echo userScriptsDir = GetDir #userScripts >> "%installfile%"
 echo. >> "%installfile%"
 echo maxstackMNXPath     = "C:\\Users\\" + sysInfo.username + "\\Autodesk\\3ds Max 2026\\User Settings\\MaxStack.mnx" >> "%installfile%"
 echo maxstackLoaderPath  = "C:\\Users\\" + sysInfo.username + "\\AppData\\Local\\Autodesk\\3dsMax\\2026 - 64bit\\ENU\\scripts\\startup\\MaxStack_loader.ms" >> "%installfile%"
-echo maxstackVersionPath = userScriptsDir + "\\MaxStack\\version.txt" >> "%installfile%"
+echo maxstackVersionPath = "C:\\Users\\" + sysInfo.username + "\\AppData\\Local\\Autodesk\\3dsMax\\2026 - 64bit\\ENU\\scripts\\MaxStack\\version.txt" >> "%installfile%"
 echo. >> "%installfile%"
 echo fn safeCopy src dst = ( >> "%installfile%"
 echo     if doesFileExist src then ( >> "%installfile%"
@@ -126,16 +130,18 @@ if exist "%mzpfile%" (
 )
 
 :: --- Build MZP ---
+:: Etape 1 : fichiers src
 pushd "%srcdir%"
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip "%mzpfile%" *
 popd
 
+:: Etape 2 : mzp.run + install_scripts.ms + version.txt depuis outdir
 pushd "%outdir%"
-"%ProgramFiles%\7-Zip\7z.exe" a -tzip "%mzpfile%" mzp.run install_scripts.ms
+"%ProgramFiles%\7-Zip\7z.exe" a -tzip "%mzpfile%" mzp.run install_scripts.ms version.txt
 popd
 
 :: --- Copie a la racine du repo ---
-copy /Y "%mzpfile%" "%~dp0MaxStack.mzp" >nul
+copy /Y "%mzpfile%" "%repodir%MaxStack.mzp" >nul
 echo MaxStack.mzp copie a la racine.
 
 echo.
@@ -149,7 +155,7 @@ echo.
 set /p dopublish=Publier sur GitHub (git add/commit/push) ? (o/n) :
 if /I not "%dopublish%"=="o" goto done
 
-pushd "%~dp0"
+pushd "%repodir%"
 git add .
 git commit -m "release v%currentver%"
 git push
