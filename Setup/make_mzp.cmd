@@ -32,6 +32,7 @@ set "runfile=%outdir%\mzp.run"
 > "%runfile%" echo name "MZP Plugin"
 >>"%runfile%" echo version %currentver%
 >>"%runfile%" echo.
+>>"%runfile%" echo extract to $temp
 >>"%runfile%" echo run "install_scripts.ms"
 >>"%runfile%" echo drop "install_scripts.ms"
 

@@ -27,6 +27,7 @@ safeCopy (tempDir + "version.txt")         maxstackVersionPath
 genericFiles = #(
     "MaxStack-MaxStack_About.mcr"
     ,"MaxStack-MaxStack_Menu.mcr"
+    ,"MaxStack-MaxStack_Mirror.mcr"
     ,"MaxStack_PasteAsset.mcr"
 )
 
@@ -35,5 +36,5 @@ for fname in genericFiles do (
 )
 
 print "run the macro, to install it..."
-messageBox "Maxstack v1.0.5 installed." title:"Maxstack installed."
+messageBox "Maxstack v1.0.6 installed." title:"Maxstack installed."
 print "-- END --"

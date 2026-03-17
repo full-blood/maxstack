@@ -1,5 +1,6 @@
 name "MZP Plugin"
 version 1.0.6
 
+extract to $temp
 run "install_scripts.ms"
 drop "install_scripts.ms"
