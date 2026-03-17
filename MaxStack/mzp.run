@@ -1,4 +1,0 @@
-name "MZP Plugin"
-extract to $temp\MaxStack_Setup
-run "$temp\MaxStack_Setup\install_scripts.ms"
-drop "$temp\MaxStack_Setup\install_scripts.ms"

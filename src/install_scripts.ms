@@ -46,5 +46,3 @@ for f in getFiles (tempDir + "\\*.*") do (
 )
 
 print "run the macro, to install it..."
-messageBox "Maxstack scripts installed. Please restart 3dsmax !" title:"Maxstack installed."
-print "-- END --"
