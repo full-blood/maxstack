@@ -1,6 +1,6 @@
 @echo off
 @REM ====================================================
-@REM Final MaxStack MZP Builder (Optimisé & Corrigé)
+@REM Final MaxStack MZP Builder (Optimise, Corrige & Auto-Version)
 @REM ====================================================
 setlocal EnableDelayedExpansion
 
@@ -14,14 +14,40 @@ set count=1
 :: --- Create output folder if needed ---
 if not exist "%outdir%" mkdir "%outdir%"
 
-:: --- Lecture version depuis la racine du repo ---
+:: --- Lecture et Auto-Increment de la version ---
 set "versionfile=%repodir%version.txt"
 if not exist "%versionfile%" (
     > "%versionfile%" echo 1.0.0
     echo version.txt cree avec valeur 1.0.0
 )
 set /p currentver=<"%versionfile%"
+
+:: Securite : retire les espaces invisibles potentiels
+set "currentver=%currentver: =%"
+
+:: Decoupage de la version (format attendu X.Y.Z)
+for /f "tokens=1,2,3 delims=." %%a in ("%currentver%") do (
+    set major=%%a
+    set minor=%%b
+    set patch=%%c
+)
+:: Calcul de la prochaine version
+set /a nextpatch=patch + 1
+set "nextver=%major%.%minor%.%nextpatch%"
+
+echo.
+echo ============================================
 echo Version actuelle : %currentver%
+echo ============================================
+set /p dobump="Passer a la version %nextver% avant de builder ? (o/n) : "
+if /I "%dobump%"=="o" (
+    set "currentver=%nextver%"
+    > "%versionfile%" echo !currentver!
+    echo Version mise a jour : !currentver!
+) else (
+    echo On conserve la version : %currentver%
+)
+echo.
 
 :: --- Copie version.txt vers outdir pour inclusion dans le MZP ---
 copy /Y "%versionfile%" "%outdir%\version.txt" >nul
@@ -49,7 +75,7 @@ set "installfile=%outdir%\install_scripts.ms"
 >>"%installfile%" echo startupDir = GetDir #userStartupScripts
 >>"%installfile%" echo scriptsDir = GetDir #userScripts
 >>"%installfile%" echo.
->>"%installfile%" echo -- Chemins cibles securises (independants de la langue et de la version)
+>>"%installfile%" echo -- Chemins cibles securises
 >>"%installfile%" echo maxstackMNXPath     = "C:\\Users\\" + sysInfo.username + "\\Autodesk\\3ds Max 2026\\User Settings\\MaxStack.mnx"
 >>"%installfile%" echo maxstackLoaderPath  = startupDir + "\\MaxStack_loader.ms"
 >>"%installfile%" echo maxstackVersionPath = scriptsDir + "\\MaxStack\\version.txt"
@@ -138,7 +164,7 @@ echo ============================================
 echo.
 
 :: --- Git push ---
-set /p dopublish=Publier sur GitHub (git add/commit/push) ? (o/n) : 
+set /p dopublish="Publier sur GitHub (git add/commit/push) ? (o/n) : "
 if /I not "%dopublish%"=="o" goto done
 
 pushd "%repodir%"
