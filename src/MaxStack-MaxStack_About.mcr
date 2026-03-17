@@ -67,6 +67,11 @@ macroScript MaxStack_About category:"MaxStack" tooltip:"À propos de MaxStack"
     -- -----------------------------------------------
     if doUpdate then (
         try (
+            -- /!\ LIGNES CRUCIALES POUR GITHUB : Forcer TLS 1.2 /!\
+            local securityProtocolType = dotNetClass "System.Net.SecurityProtocolType"
+            local servicePointManager = dotNetClass "System.Net.ServicePointManager"
+            servicePointManager.SecurityProtocol = securityProtocolType.Tls12
+
             local http     = dotNetObject "System.Net.WebClient"
             http.Headers.Add "User-Agent" "MaxScript"
             local tempDir  = getDir #temp
@@ -77,8 +82,8 @@ macroScript MaxStack_About category:"MaxStack" tooltip:"À propos de MaxStack"
             http.DownloadFile mzpURL mzpPath
 
             if doesFileExist mzpPath then (
-                -- Lance l'installation MZP native de 3ds Max
-                installPkg mzpPath
+                -- fileIn lance l'installation de façon plus fiable que installPkg
+                fileIn mzpPath
                 messageBox ("MaxStack mis à jour vers v" + remoteVer + ".\nRelancez 3ds Max pour appliquer.") title:"MaxStack Update"
             ) else (
                 messageBox "Téléchargement échoué. Essayez manuellement :\n" + releasesURL title:"Erreur"
