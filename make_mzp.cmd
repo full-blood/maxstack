@@ -32,9 +32,9 @@ set "runfile=%outdir%\mzp.run"
 > "%runfile%" echo name "MZP Plugin"
 >>"%runfile%" echo version %currentver%
 >>"%runfile%" echo.
->>"%runfile%" echo extract to $temp
->>"%runfile%" echo run "install_scripts.ms"
->>"%runfile%" echo drop "install_scripts.ms"
+>>"%runfile%" echo extract to $temp\MaxStack_Setup
+>>"%runfile%" echo run "$temp\MaxStack_Setup\install_scripts.ms"
+>>"%runfile%" echo drop "$temp\MaxStack_Setup\install_scripts.ms"
 
 echo mzp.run generated.
 
@@ -44,12 +44,15 @@ set "installfile=%outdir%\install_scripts.ms"
 > "%installfile%" echo -- clearListener()
 >>"%installfile%" echo print "install maxstack menu..."
 >>"%installfile%" echo.
->>"%installfile%" echo tempDir = getFilenamePath (getThisScriptFilename())
+>>"%installfile%" echo tempDir = (GetDir #temp) + "\\MaxStack_Setup\\"
 >>"%installfile%" echo userMacroDir = GetDir #userMacros
+>>"%installfile%" echo startupDir = GetDir #userStartupScripts
+>>"%installfile%" echo scriptsDir = GetDir #userScripts
 >>"%installfile%" echo.
+>>"%installfile%" echo -- Chemins cibles securises (independants de la langue et de la version)
 >>"%installfile%" echo maxstackMNXPath     = "C:\\Users\\" + sysInfo.username + "\\Autodesk\\3ds Max 2026\\User Settings\\MaxStack.mnx"
->>"%installfile%" echo maxstackLoaderPath  = "C:\\Users\\" + sysInfo.username + "\\AppData\\Local\\Autodesk\\3dsMax\\2026 - 64bit\\ENU\\scripts\\startup\\MaxStack_loader.ms"
->>"%installfile%" echo maxstackVersionPath = "C:\\Users\\" + sysInfo.username + "\\AppData\\Local\\Autodesk\\3dsMax\\2026 - 64bit\\ENU\\scripts\\MaxStack\\version.txt"
+>>"%installfile%" echo maxstackLoaderPath  = startupDir + "\\MaxStack_loader.ms"
+>>"%installfile%" echo maxstackVersionPath = scriptsDir + "\\MaxStack\\version.txt"
 >>"%installfile%" echo.
 >>"%installfile%" echo fn safeCopy src dst = (
 >>"%installfile%" echo     if doesFileExist src then (

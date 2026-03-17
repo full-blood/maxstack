@@ -1,12 +1,15 @@
 -- clearListener()
 print "install maxstack menu..."
 
-tempDir = getFilenamePath (getThisScriptFilename())
+tempDir = (GetDir #temp) + "\\MaxStack_Setup\\"
 userMacroDir = GetDir #userMacros
+startupDir = GetDir #userStartupScripts
+scriptsDir = GetDir #userScripts
 
+-- Chemins cibles securises (independants de la langue et de la version)
 maxstackMNXPath     = "C:\\Users\\" + sysInfo.username + "\\Autodesk\\3ds Max 2026\\User Settings\\MaxStack.mnx"
-maxstackLoaderPath  = "C:\\Users\\" + sysInfo.username + "\\AppData\\Local\\Autodesk\\3dsMax\\2026 - 64bit\\ENU\\scripts\\startup\\MaxStack_loader.ms"
-maxstackVersionPath = "C:\\Users\\" + sysInfo.username + "\\AppData\\Local\\Autodesk\\3dsMax\\2026 - 64bit\\ENU\\scripts\\MaxStack\\version.txt"
+maxstackLoaderPath  = startupDir + "\\MaxStack_loader.ms"
+maxstackVersionPath = scriptsDir + "\\MaxStack\\version.txt"
 
 fn safeCopy src dst = (
     if doesFileExist src then (

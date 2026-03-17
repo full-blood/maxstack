@@ -1,7 +1,0 @@
-name "MZP Plugin" 
-version 0.1 
- 
-copy install_scripts.ms to $temp 
-copy MaxStack.mnx to $temp 
-copy MaxStack_loader.ms to $temp 
-run "install_scripts.ms" 

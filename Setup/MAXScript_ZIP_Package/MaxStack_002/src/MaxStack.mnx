@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<MaxMenuTransformations>
-    <CreateMenu ParentId="b4779ebb-a6f0-4815-9777-57c01c0b584c" MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Title="MaxStack"/>
-    <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="5b293857-69a3-4216-ac8e-8b5d6bb40c40" ActionId="647394-MaxStack_About`MaxStack"/>
-</MaxMenuTransformations>
