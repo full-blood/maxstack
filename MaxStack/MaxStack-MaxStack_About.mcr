@@ -45,7 +45,7 @@ macroScript MaxStack_About category:"MaxStack" tooltip:"À propos de MaxStack"
     -- -----------------------------------------------
     -- UI
     -- -----------------------------------------------
-    local msg = "MaxStack v" + localVer + "\n\nGestionnaire de scripts automatisé.\n\n"
+    local msg = "MaxStack v" + localVer + "\nUn tas de scripts.\n\n"
 
     if not fetchOK then
         msg += "⚠ Impossible de vérifier les mises à jour (pas de connexion ?)."
