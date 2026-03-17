@@ -1,6 +1,6 @@
 macroScript MaxStack_PasteAsset
 category:"MaxStack"
-buttonText:"PasteAsset"
+buttonText:"Paste Asset from Library"
 tooltip:"Paste asset (Shift + Click for _proxy version)"
 Icon:#("pasteasset",1)
 (

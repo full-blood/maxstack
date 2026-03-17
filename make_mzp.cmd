@@ -126,12 +126,23 @@ for %%F in ("%srcdir%\*") do (
 >>"%installfile%" echo     -- On evalue (recharge) les scripts pour les activer sans redemarrer 3ds Max
 >>"%installfile%" echo     local ext = toLower (getFilenameType fname)
 >>"%installfile%" echo     if ext == ".mcr" or ext == ".ms" then (
->>"%installfile%" echo         try ( fileIn dstPath ) catch ( format "Erreur d'evaluation sur %" fname )
+>>"%installfile%" echo         try ( fileIn dstPath ) catch ( format "Erreur d'evaluation sur %%\n" fname )
 >>"%installfile%" echo     )
 >>"%installfile%" echo )
 >>"%installfile%" echo.
->>"%installfile%" echo print "run the macro, to install it..."
->>"%installfile%" echo messageBox "Maxstack v%currentver% installed." title:"Maxstack installed."
+>>"%installfile%" echo -- -----------------------------------------------
+>>"%installfile%" echo -- Rechargement du Menu (3ds Max 2025+)
+>>"%installfile%" echo -- -----------------------------------------------
+>>"%installfile%" echo try (
+>>"%installfile%" echo     local menuMgr = maxops.GetICuiMenuMgr()
+>>"%installfile%" echo     menuMgr.LoadConfiguration maxstackMNXPath
+>>"%installfile%" echo     print "Menu charge avec succes !"
+>>"%installfile%" echo ) catch (
+>>"%installfile%" echo     format "Erreur lors du chargement du menu : %%\n" (getCurrentException())
+>>"%installfile%" echo )
+>>"%installfile%" echo.
+>>"%installfile%" echo print "Installation terminée."
+>>"%installfile%" echo messageBox "Maxstack v%currentver% installée avec succès !\n\nLe menu a été mis à jour."
 >>"%installfile%" echo print "-- END --"
 
 echo install_scripts.ms generated.

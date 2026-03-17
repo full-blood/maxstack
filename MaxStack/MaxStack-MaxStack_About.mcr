@@ -23,29 +23,55 @@ macroScript MaxStack_About category:"MaxStack" tooltip:"À propos de MaxStack"
     )
 
     -- -----------------------------------------------
-    -- Version distante via GitHub raw
+    -- NOUVEAU : Comparaison Mathématique Réelle (SemVer)
+    -- -----------------------------------------------
+    fn isNewerVersion remote localStr = (
+        local rArr = filterString remote ".vV \t\r\n"
+        local lArr = filterString localStr ".vV \t\r\n"
+        local maxLen = amax rArr.count lArr.count
+        
+        for i = 1 to maxLen do (
+            local rVal = if i <= rArr.count then (rArr[i] as integer) else 0
+            local lVal = if i <= lArr.count then (lArr[i] as integer) else 0
+            
+            if rVal > lVal do return true  
+            if rVal < lVal do return false 
+        )
+        return false 
+    )
+
+    -- -----------------------------------------------
+    -- Version distante via GitHub raw (Avec Anti-Cache)
     -- -----------------------------------------------
     local remoteVer   = ""
     local fetchOK     = false
 
     try (
+        -- Forcer TLS 1.2 pour l'API GitHub
+        local securityProtocolType = dotNetClass "System.Net.SecurityProtocolType"
+        local servicePointManager = dotNetClass "System.Net.ServicePointManager"
+        servicePointManager.SecurityProtocol = securityProtocolType.Tls12
+
         local http = dotNetObject "System.Net.WebClient"
         http.Headers.Add "User-Agent" "MaxScript"
-        remoteVer = trimRight (http.DownloadString (baseRawURL + "version.txt"))
+        
+        -- Anti-Cache
+        local cacheBuster = (random 1 9999999) as string
+        remoteVer = trimRight (http.DownloadString (baseRawURL + "version.txt?t=" + cacheBuster))
         fetchOK   = true
     ) catch (
         remoteVer = ""
     )
 
     -- -----------------------------------------------
-    -- Comparaison simple (string suffisant si semver x.y.z)
+    -- Comparaison Intelligente
     -- -----------------------------------------------
-    local updateAvail = fetchOK and (remoteVer != "") and (remoteVer != localVer)
+    local updateAvail = fetchOK and (remoteVer != "") and (isNewerVersion remoteVer localVer)
 
     -- -----------------------------------------------
     -- UI
     -- -----------------------------------------------
-    local msg = "MaxStack v" + localVer + "\nUn tas de scripts.\n\n"
+    local msg = "MaxStack v" + localVer + "\n\nGestionnaire de scripts automatisé.\n\n"
 
     if not fetchOK then
         msg += "⚠ Impossible de vérifier les mises à jour (pas de connexion ?)."

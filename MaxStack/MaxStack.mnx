@@ -3,4 +3,12 @@
     <CreateMenu ParentId="b4779ebb-a6f0-4815-9777-57c01c0b584c" MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Title="MaxStack"/>
     <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="5b293857-69a3-4216-ac8e-8b5d6bb40c40" ActionId="647394-MaxStack_About`MaxStack"/>
     <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="5eeb816f-58e1-42bf-be53-97335feb2c9a" ActionId="647394-MaxStack_PasteAsset`MaxStack" BeforeId="5b293857-69a3-4216-ac8e-8b5d6bb40c40"/>
+    <CreateMenuAction MenuId="b4779ebb-a6f0-4815-9777-57c01c0b584c" Id="fb9acccd-9ddb-4d33-89e8-5dfc25073cc7" ActionId="647394-MaxStack_PasteClipboardImg`MaxStack" BeforeId="25b0a868-5954-4e8c-9697-2c84a412440f"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="fb9acccd-9ddb-4d33-89e8-5dfc25073cc7" BeforeId="5eeb816f-58e1-42bf-be53-97335feb2c9a"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="5eeb816f-58e1-42bf-be53-97335feb2c9a" BeforeId="fb9acccd-9ddb-4d33-89e8-5dfc25073cc7"/>
+    <CreateMenuSeparator MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="88d92a74-166b-4775-a581-5aea8ce30c5c" BeforeId="fb9acccd-9ddb-4d33-89e8-5dfc25073cc7"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="fb9acccd-9ddb-4d33-89e8-5dfc25073cc7" BeforeId="88d92a74-166b-4775-a581-5aea8ce30c5c"/>
+    <CreateMenu ParentId="25b0a868-5954-4e8c-9697-2c84a412440f" MenuId="5504ae84-d669-4e1f-8553-31b0f91710b8" Title="Transform" BeforeId="88d92a74-166b-4775-a581-5aea8ce30c5c"/>
+    <CreateMenuAction MenuId="5504ae84-d669-4e1f-8553-31b0f91710b8" Id="b3ca8ca1-e965-477e-b9fb-77bc5dddc37d" ActionId="647394-MaxStack_MoveHalf`MaxStack"/>
+    <CreateMenuAction MenuId="5504ae84-d669-4e1f-8553-31b0f91710b8" Id="669f8180-a77a-42bb-947e-f541d95cf2c9" ActionId="647394-MaxStack_Mirror`MaxStack"/>
 </MaxMenuTransformations>

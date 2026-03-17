@@ -1,7 +1,7 @@
 -- clearListener()
 print "install maxstack menu..."
 
-tempDir = (GetDir #temp) + "\\MaxStack_Setup\\"
+tempDir = getFilenamePath (getSourceFileName())
 userMacroDir = GetDir #userMacros
 startupDir = GetDir #userStartupScripts
 scriptsDir = GetDir #userScripts
@@ -31,13 +31,33 @@ genericFiles = #(
     "MaxStack-MaxStack_About.mcr"
     ,"MaxStack-MaxStack_Menu.mcr"
     ,"MaxStack-MaxStack_Mirror.mcr"
+    ,"MaxStack-MaxStack_MoveHalf.mcr"
+    ,"MaxStack_MaxStack_PasteClipboardImg.ms"
     ,"MaxStack_PasteAsset.mcr"
 )
 
 for fname in genericFiles do (
-    safeCopy (tempDir + fname) (userMacroDir + "\\" + fname)
+    local dstPath = userMacroDir + "\\" + fname
+    safeCopy (tempDir + fname) dstPath
+
+    -- On evalue (recharge) les scripts pour les activer sans redemarrer 3ds Max
+    local ext = toLower (getFilenameType fname)
+    if ext == ".mcr" or ext == ".ms" then (
+        try ( fileIn dstPath ) catch ( format "Erreur d'evaluation sur %\n" fname )
+    )
 )
 
-print "run the macro, to install it..."
-messageBox "Maxstack v1.0.6 installed." title:"Maxstack installed."
+-- -----------------------------------------------
+-- Rechargement du Menu (3ds Max 2025+)
+-- -----------------------------------------------
+try (
+    local menuMgr = maxops.GetICuiMenuMgr()
+    menuMgr.LoadConfiguration maxstackMNXPath
+    print "Menu charge avec succes "
+) catch (
+    format "Erreur lors du chargement du menu : %\n" (getCurrentException())
+)
+
+print "Installation terminée."
+messageBox "Maxstack v1.0.12 installée avec succès "Maxstack installe"
 print "-- END --"
