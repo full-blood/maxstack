@@ -68,7 +68,7 @@ set "installfile=%outdir%\install_scripts.ms"
 > "%installfile%" echo -- clearListener()
 >>"%installfile%" echo print "install maxstack menu..."
 >>"%installfile%" echo.
->>"%installfile%" echo tempDir = (GetDir #temp) + "\\MaxStack_Setup\\"
+>>"%installfile%" echo tempDir = getFilenamePath (getSourceFileName())
 >>"%installfile%" echo userMacroDir = GetDir #userMacros
 >>"%installfile%" echo startupDir = GetDir #userStartupScripts
 >>"%installfile%" echo scriptsDir = GetDir #userScripts
@@ -120,7 +120,14 @@ for %%F in ("%srcdir%\*") do (
 >>"%installfile%" echo )
 >>"%installfile%" echo.
 >>"%installfile%" echo for fname in genericFiles do (
->>"%installfile%" echo     safeCopy (tempDir + fname) (userMacroDir + "\\" + fname)
+>>"%installfile%" echo     local dstPath = userMacroDir + "\\" + fname
+>>"%installfile%" echo     safeCopy (tempDir + fname) dstPath
+>>"%installfile%" echo.
+>>"%installfile%" echo     -- On evalue (recharge) les scripts pour les activer sans redemarrer 3ds Max
+>>"%installfile%" echo     local ext = toLower (getFilenameType fname)
+>>"%installfile%" echo     if ext == ".mcr" or ext == ".ms" then (
+>>"%installfile%" echo         try ( fileIn dstPath ) catch ( format "Erreur d'evaluation sur %" fname )
+>>"%installfile%" echo     )
 >>"%installfile%" echo )
 >>"%installfile%" echo.
 >>"%installfile%" echo print "run the macro, to install it..."

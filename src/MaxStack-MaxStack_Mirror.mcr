@@ -1,90 +1,58 @@
 macroScript MaxStack_Mirror
     category:"MaxStack" 
-    tooltip:"Smart Mirror Tool"
+    tooltip:"Mirror Tool"
     buttonText:"Mirror"
 (
-    rollout MirrorToolRollout "Smart Mirror"
-    (
-        group "Axis"
-        (
-            radiobuttons rb_axis labels:#("X", "Y", "Z") default:1 columns:3
-        )
-        
-        group "Options"
-        (
-            checkbox chk_copy "Create Copy" checked:false
-            checkbox chk_instance "Instance" checked:false enabled:false
-        )
-        
-        button btn_mirror "Mirror Selection" width:140 height:30
-        
-        on chk_copy changed state do
-        (
-            chk_instance.enabled = state
-        )
-        
-        on btn_mirror pressed do
-        (
-            if selection.count == 0 then
-            (
-                messageBox "Veuillez sélectionner au moins un objet" title:"Mirror Tool"
-                return false
-            )
-            
-            undo "Smart Mirror" on
-            (
-                local axis = case rb_axis.state of
-                (
-                    1: [1,0,0]  -- X
-                    2: [0,1,0]  -- Y
-                    3: [0,0,1]  -- Z
-                )
-                
-                local mirroredObjects = #()
-                
-                for obj in selection do
-                (
-                    local newObj = obj
-                    
-                    -- Créer une copie ou instance si demandé
-                    if chk_copy.checked then
-                    (
-                        if chk_instance.checked then
-                            newObj = instance obj
-                        else
-                            newObj = copy obj
-                        
-                        append mirroredObjects newObj
-                    )
-                    
-                    -- Appliquer le miroir
-                    local mirrorTM = mirrorMatrix axis [0,0,0]
-                    newObj.transform = newObj.transform * mirrorTM
-                    
-                    -- Inverser les normales si nécessaire
-                    if classOf newObj.baseObject == Editable_Poly or \
-                       classOf newObj.baseObject == PolyMeshObject then
-                    (
-                        addModifier newObj (Normalmodifier())
-                        newObj.modifiers[#Normal].flip = true
-                        collapseStack newObj
-                    )
-                )
-                
-                if chk_copy.checked then
-                (
-                    select mirroredObjects
-                    format "? % objet(s) miroir créé(s)\n" mirroredObjects.count
-                )
-                else
-                (
-                    format "? % objet(s) miroir(s) en place\n" selection.count
-                )
-            )
-            
-            messageBox "Miroir appliqué avec succès!" title:"Mirror Tool"
-        )
-    )
-    
-    createDialog MirrorToolRollout 180 180
+	
+saveCoordCenter = getCoordCenter()
+saveCoordRef = getRefCoordSys()
+fn getBoundingBoxCenter obj =
+(
+    bb = nodeLocalBoundingBox obj
+)
+
+-- Save current selection
+originalSelection = selection as array
+
+-- Pick an object
+pickedObj = pickObject prompt:"Pick reference object (mirror center)"
+
+if isValidNode pickedObj then
+(
+    -- Restore previous selection
+    select originalSelection
+
+    -- Get center of picked object
+	centerPoint = getBoundingBoxCenter pickedObj
+	centerX = (centerPoint[1].x+((centerPoint[2].x - centerPoint[1].x)/2))
+	centerY = (centerPoint[1].y+((centerPoint[2].y - centerPoint[1].y)/2))
+	centerZ = (centerPoint[1].z+((centerPoint[2].z - centerPoint[1].z)/2))
+	centerPoint = [centerX,centerY,centerZ]
+
+	pickedObj_center = Point pos:[centerX,centerY,centerZ]
+	pickedObj_center.name = "mirror_pt_to_delete"
+		
+    toolMode.transformCenter() 
+	if isValidNode pickedObj_center do toolMode.coordsys pickedObj_center
+
+    max mirror
+	
+	
+)
+else
+(
+    print "No valid object was picked."
+)
+
+if saveCoordCenter == #selection do (
+	toolMode.selectionCenter() 
+)
+if saveCoordCenter == #local do (
+	toolMode.pivotCenter()
+)
+if saveCoordRef == #hybrid then (toolMode.coordsys #view)
+else if saveCoordRef == #local then (toolMode.coordsys #local)
+else (toolMode.coordsys #view)
+
+try(delete $'mirror_pt_to_delete')catch("no point found")
 )
