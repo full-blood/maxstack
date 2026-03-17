@@ -11,4 +11,8 @@
     <CreateMenu ParentId="25b0a868-5954-4e8c-9697-2c84a412440f" MenuId="5504ae84-d669-4e1f-8553-31b0f91710b8" Title="Transform" BeforeId="88d92a74-166b-4775-a581-5aea8ce30c5c"/>
     <CreateMenuAction MenuId="5504ae84-d669-4e1f-8553-31b0f91710b8" Id="b3ca8ca1-e965-477e-b9fb-77bc5dddc37d" ActionId="647394-MaxStack_MoveHalf`MaxStack"/>
     <CreateMenuAction MenuId="5504ae84-d669-4e1f-8553-31b0f91710b8" Id="669f8180-a77a-42bb-947e-f541d95cf2c9" ActionId="647394-MaxStack_Mirror`MaxStack"/>
+    <CreateMenu ParentId="25b0a868-5954-4e8c-9697-2c84a412440f" MenuId="d3564e68-ab86-4126-8c01-6543f0921f6d" Title="Render" BeforeId="5504ae84-d669-4e1f-8553-31b0f91710b8"/>
+    <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="3165bab6-75ff-496d-9810-190a7aa6dbce" ActionId="647394-MaxStack_BatchRender`MaxStack" BeforeId="5504ae84-d669-4e1f-8553-31b0f91710b8"/>
+    <MoveItem DestinationId="d3564e68-ab86-4126-8c01-6543f0921f6d" ItemId="3165bab6-75ff-496d-9810-190a7aa6dbce"/>
+    <CreateMenuAction MenuId="d3564e68-ab86-4126-8c01-6543f0921f6d" Id="788d1e9b-b3e6-4af2-ad93-a53a76be3ba4" ActionId="647394-MaxStack_OpenRenderoutput`MaxStack"/>
 </MaxMenuTransformations>
