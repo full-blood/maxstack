@@ -56,7 +56,7 @@ copy /Y "%versionfile%" "%outdir%\version.txt" >nul
 set "runfile=%outdir%\mzp.run"
 
 > "%runfile%" echo name "MZP Plugin"
->>"%runfile%" echo version %currentver%
+>>"%runfile%" echo version "%currentver%"
 >>"%runfile%" echo.
 >>"%runfile%" echo extract to $temp\MaxStack_Setup
 >>"%runfile%" echo run "$temp\MaxStack_Setup\install_scripts.ms"
