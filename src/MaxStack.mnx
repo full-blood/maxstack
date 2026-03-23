@@ -15,4 +15,14 @@
     <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="3165bab6-75ff-496d-9810-190a7aa6dbce" ActionId="647394-MaxStack_BatchRender`MaxStack" BeforeId="5504ae84-d669-4e1f-8553-31b0f91710b8"/>
     <MoveItem DestinationId="d3564e68-ab86-4126-8c01-6543f0921f6d" ItemId="3165bab6-75ff-496d-9810-190a7aa6dbce"/>
     <CreateMenuAction MenuId="d3564e68-ab86-4126-8c01-6543f0921f6d" Id="788d1e9b-b3e6-4af2-ad93-a53a76be3ba4" ActionId="647394-MaxStack_OpenRenderoutput`MaxStack"/>
+    <CreateMenu ParentId="25b0a868-5954-4e8c-9697-2c84a412440f" MenuId="5d57842f-0438-48ff-b684-1ae078b2661f" Title="Selection" BeforeId="fb9acccd-9ddb-4d33-89e8-5dfc25073cc7"/>
+    <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="afb79b27-4312-4a13-8c27-cf0158844f88" ActionId="647394-MaxStack_PasteClipboardImg`MaxStack" BeforeId="5d57842f-0438-48ff-b684-1ae078b2661f"/>
+    <DeleteItem Id="fb9acccd-9ddb-4d33-89e8-5dfc25073cc7"/>
+    <CreateMenuAction MenuId="5d57842f-0438-48ff-b684-1ae078b2661f" Id="011c8623-3527-463e-a174-f643186981a1" ActionId="647394-MaxStack_SplineFromModifier`MaxStack"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="5d57842f-0438-48ff-b684-1ae078b2661f" BeforeId="5504ae84-d669-4e1f-8553-31b0f91710b8"/>
+    <CreateMenu ParentId="25b0a868-5954-4e8c-9697-2c84a412440f" MenuId="f53e1be4-098c-4299-8f75-cdf3380fa4c7" Title="Material" BeforeId="d3564e68-ab86-4126-8c01-6543f0921f6d"/>
+    <MoveItem DestinationId="f53e1be4-098c-4299-8f75-cdf3380fa4c7" ItemId="afb79b27-4312-4a13-8c27-cf0158844f88"/>
+    <CreateMenuSeparator MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="f6f53bbb-fbd3-462a-8d90-c3fb614bc07c" BeforeId="5eeb816f-58e1-42bf-be53-97335feb2c9a"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="5eeb816f-58e1-42bf-be53-97335feb2c9a" BeforeId="f6f53bbb-fbd3-462a-8d90-c3fb614bc07c"/>
+    <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="426cf111-f9fb-4c9a-812a-d8c079455ab3" ActionId="647394-MaxStack_FileChecker`MaxStack" BeforeId="f6f53bbb-fbd3-462a-8d90-c3fb614bc07c"/>
 </MaxMenuTransformations>
