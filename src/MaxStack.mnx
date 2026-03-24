@@ -58,4 +58,6 @@
     <DeleteItem Id="e05f29aa-a038-43fd-a88b-30948aad8115"/>
     <CreateMenuAction MenuId="6d47d29a-f50e-409c-88bd-46c58bf8cb22" Id="a1d16c9a-0efd-4876-8a8e-c3af835f845b" ActionId="647394-MaxStack_TapeTool`MaxStack"/>
     <CreateMenuAction MenuId="f53e1be4-098c-4299-8f75-cdf3380fa4c7" Id="706f305b-7676-4697-972f-1914e9127307" ActionId="647394-MaxStack_RemoveMat`MaxStack"/>
+    <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="d3a4c6f0-02f1-4f17-a68e-c9e08c8d11dd" ActionId="647394-MaxStack_ResizeMaps`MaxStack" BeforeId="6d47d29a-f50e-409c-88bd-46c58bf8cb22"/>
+    <MoveItem DestinationId="6d47d29a-f50e-409c-88bd-46c58bf8cb22" ItemId="d3a4c6f0-02f1-4f17-a68e-c9e08c8d11dd"/>
 </MaxMenuTransformations>

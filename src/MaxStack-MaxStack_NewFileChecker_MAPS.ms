@@ -4,8 +4,8 @@
 global bitmapList      = #()
 global bitmapList_clean = #()
 
-local W = 380
-local H = 540
+global W = 380
+global H = 540
 
 -- ===========================================================
 -- UTILITY FUNCTIONS
