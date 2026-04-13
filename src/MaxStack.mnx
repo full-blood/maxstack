@@ -70,4 +70,9 @@
     <CreateMenuAction MenuId="6d47d29a-f50e-409c-88bd-46c58bf8cb22" Id="22a043d6-fa26-4708-8fc7-44b958b6e147" ActionId="647394-MaxStack_ResizeMaps`MaxStack"/>
     <DeleteItem Id="22a043d6-fa26-4708-8fc7-44b958b6e147"/>
     <CreateMenuAction MenuId="6d47d29a-f50e-409c-88bd-46c58bf8cb22" Id="6664b907-36e6-4d7d-98f2-cd14c9394e9e" ActionId="647394-MaxStack_ResizeBitmaps`MaxStack"/>
+    <CreateMenuAction MenuId="f53e1be4-098c-4299-8f75-cdf3380fa4c7" Id="3ab55ee8-7367-4de8-bee4-244b53f29048" ActionId="647394-MaxStack_RenameMaterial`MaxStack"/>
+    <CreateMenu ParentId="25b0a868-5954-4e8c-9697-2c84a412440f" MenuId="4321ace6-3838-4528-b614-092282fd6bfa" Title="File" BeforeId="5504ae84-d669-4e1f-8553-31b0f91710b8"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="5504ae84-d669-4e1f-8553-31b0f91710b8" BeforeId="4321ace6-3838-4528-b614-092282fd6bfa"/>
+    <SetItemTitle Id="4321ace6-3838-4528-b614-092282fd6bfa" Title="Files" ResIdTitle="cea29e05-41f8-470c-b21b-43bd5e9bf87a"/>
+    <CreateMenuAction MenuId="4321ace6-3838-4528-b614-092282fd6bfa" Id="0ef04e99-c63d-4757-ad9d-63d468dbc495" ActionId="647394-MaxStack_SaveArchiveSelection`MaxStack"/>
 </MaxMenuTransformations>
