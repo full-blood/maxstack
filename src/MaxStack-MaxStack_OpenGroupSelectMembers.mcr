@@ -13,7 +13,7 @@ Description: Ouvre le(s) groupe(s) sélectionné(s) et sélectionne uniquement
 macroScript MaxStack_OpenGroupSelectMembers
     category:"MaxStack" 
     tooltip:"Open group and select its members"
-    buttonText:"Open & Sel. items"
+    buttonText:"Open and Sel. items"
 (
     -- 1. On stocke la sélection actuelle dans un tableau figé
     local sel = selection as array

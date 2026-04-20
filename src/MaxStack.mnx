@@ -80,4 +80,8 @@
     <CreateMenuAction MenuId="5d57842f-0438-48ff-b684-1ae078b2661f" Id="ac37949d-7d91-4ade-91f5-a3cdec88a701" ActionId="647394-MaxStack_SelectWithoutLightsGroups`MaxStack"/>
     <CreateMenuAction MenuId="5d57842f-0438-48ff-b684-1ae078b2661f" Id="a675708c-a45b-4166-b20f-f29acb4fd476" ActionId="647394-MaxStack_OpenGroupSelectMembers`MaxStack"/>
     <CreateMenuAction MenuId="5d57842f-0438-48ff-b684-1ae078b2661f" Id="a45be53c-7629-497b-9e80-7b8bb9f1dbaa" ActionId="647394-MaxStack_SelectUnselectGroup`MaxStack"/>
+    <DeleteItem Id="6664b907-36e6-4d7d-98f2-cd14c9394e9e"/>
+    <CreateMenuAction MenuId="6d47d29a-f50e-409c-88bd-46c58bf8cb22" Id="5b81d356-a9dc-4e53-b1ca-77b39092dbb2" ActionId="647394-MaxStack_ResizeBitmaps`MaxStack"/>
+    <CreateMenuAction MenuId="6d47d29a-f50e-409c-88bd-46c58bf8cb22" Id="b709bd83-e2e5-4763-b4bd-9b91fc3f928d" ActionId="647394-Bitmap_Downscaler`MaxStack"/>
+    <DeleteItem Id="5b81d356-a9dc-4e53-b1ca-77b39092dbb2"/>
 </MaxMenuTransformations>
