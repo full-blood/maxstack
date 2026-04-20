@@ -76,4 +76,8 @@
     <SetItemTitle Id="4321ace6-3838-4528-b614-092282fd6bfa" Title="Files" ResIdTitle="cea29e05-41f8-470c-b21b-43bd5e9bf87a"/>
     <CreateMenuAction MenuId="4321ace6-3838-4528-b614-092282fd6bfa" Id="0ef04e99-c63d-4757-ad9d-63d468dbc495" ActionId="647394-MaxStack_SaveArchiveSelection`MaxStack"/>
     <CreateMenuAction MenuId="f53e1be4-098c-4299-8f75-cdf3380fa4c7" Id="ad748b7e-8d08-4ba5-9018-e464ff1e52fd" ActionId="647394-MaxStack_UVW100`MaxStack"/>
+    <CreateMenuAction MenuId="5d57842f-0438-48ff-b684-1ae078b2661f" Id="fe06c6c1-65c4-4c75-8b69-4e09348ec046" ActionId="647394-MaxStack_SelectSameParent`MaxStack"/>
+    <CreateMenuAction MenuId="5d57842f-0438-48ff-b684-1ae078b2661f" Id="ac37949d-7d91-4ade-91f5-a3cdec88a701" ActionId="647394-MaxStack_SelectWithoutLightsGroups`MaxStack"/>
+    <CreateMenuAction MenuId="5d57842f-0438-48ff-b684-1ae078b2661f" Id="a675708c-a45b-4166-b20f-f29acb4fd476" ActionId="647394-MaxStack_OpenGroupSelectMembers`MaxStack"/>
+    <CreateMenuAction MenuId="5d57842f-0438-48ff-b684-1ae078b2661f" Id="a45be53c-7629-497b-9e80-7b8bb9f1dbaa" ActionId="647394-MaxStack_SelectUnselectGroup`MaxStack"/>
 </MaxMenuTransformations>
