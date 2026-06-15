@@ -1,0 +1,328 @@
+/*
+================================================================================
+Script Name: MaxStack_Test_Keywords
+Description: Version autonome de l'étape 9 pour déboguer le chargement des .NET.
+             AVEC ECRAN DE CHARGEMENT (SPLASH SCREEN) ET CACHE PRE-CALCULÉ.
+================================================================================
+*/
+
+(
+    try(DestroyDialog rl_TestKeywords) catch()
+    try(DestroyDialog rl_Splash) catch()
+
+    -- ===========================================================
+    -- VARIABLES (Accessibles par les deux fenêtres)
+    -- ===========================================================
+    struct CategoryDataStruct ( catName, subcats = #() )
+    local database        = #()
+    local keyword_library = #()
+    local netKeywords_Cache = undefined -- Le secret de la vitesse !
+
+    -- ===========================================================
+    -- FONCTIONS UTILITAIRES
+    -- ===========================================================
+    fn toNetArray arr = (
+        local na = dotNetObject "System.String[]" arr.count
+        for i = 1 to arr.count do na.SetValue arr[i] (i-1)
+        na
+    )
+
+    fn fillComboBox ctrl arr = (
+        ctrl.BeginUpdate()
+        ctrl.Items.Clear()
+        if arr.count > 0 do ctrl.Items.AddRange (toNetArray arr)
+        ctrl.EndUpdate()
+    )
+
+    fn initDotNetCombobox ctrl = (
+        try (
+            ctrl.Items.Clear()
+            ctrl.AutoCompleteMode   = (dotNetClass "System.Windows.Forms.AutoCompleteMode").SuggestAppend
+            ctrl.AutoCompleteSource = (dotNetClass "System.Windows.Forms.AutoCompleteSource").ListItems
+            ctrl.DropDownStyle      = (dotNetClass "System.Windows.Forms.ComboBoxStyle").DropDown
+            ctrl.BackColor          = (dotNetClass "System.Drawing.Color").fromArgb 68 68 68 -- Gris standard Max
+            ctrl.ForeColor          = (dotNetClass "System.Drawing.Color").fromArgb 230 230 230
+            ctrl.FlatStyle          = (dotNetClass "System.Windows.Forms.FlatStyle").Flat
+            ctrl.Text = ""
+        ) catch ( print ("ERREUR D'INITIALISATION DOTNET SUR : " + ctrl as string) )
+    )
+
+    fn getAiKeywords = (
+        local imgfolder   = maxFilePath
+        local imgbaseName = getFilenameFile maxFileName
+        local imgextensions = #(".jpg", ".jpeg", ".png")
+        local imagePath   = undefined
+        for ext in imgextensions do ( if doesFileExist (imgfolder + imgbaseName + ext) do imagePath = (imgfolder + imgbaseName + ext) )
+
+        if imagePath == undefined then ( messageBox "No matching image found (jpg/png) for AI."; return #() )
+
+        local pythonExe    = "C:\\Users\\" + sysInfo.username + "\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe"
+        local scriptDir    = "C:\\Users\\" + sysInfo.username + "\\Documents\\3ds Max 2024\\Scripts\\"
+        local pythonScript = scriptDir + "_MyTools_Files_MapSearch.py"
+        local keywordsFile = scriptDir + "_MyTools_Files_MapSearch__Keywords_List.txt"
+        local tempFile     = getDir #temp + "\\object_list.txt"
+
+        if not (doesFileExist pythonExe) then ( messageBox "Python introuvable"; return #() )
+        if doesFileExist tempFile then deleteFile tempFile
+
+        local args = "/c \"\"" + pythonExe + "\" \"" + pythonScript + "\" \"" + imagePath + "\" \"" + tempFile + "\" \"" + keywordsFile + "\"\""
+        local p = dotNetObject "System.Diagnostics.Process"
+        p.StartInfo.FileName        = "cmd.exe"
+        p.StartInfo.Arguments       = args
+        p.StartInfo.WindowStyle     = (dotNetClass "System.Diagnostics.ProcessWindowStyle").Hidden
+        p.StartInfo.UseShellExecute = false
+        p.StartInfo.CreateNoWindow  = true
+        p.Start()
+        p.WaitForExit()
+
+        local keywordsFound = #()
+        if doesFileExist tempFile then (
+            local f = openFile tempFile
+            while not eof f do (
+                local line = readLine f
+                if (trimLeft (trimRight line)) != "" then append keywordsFound line
+            )
+            close f
+            return keywordsFound
+        ) else (
+            messageBox "Erreur AI : le fichier temp n'a pas été généré."
+            return #()
+        )
+    )
+
+    -- ===========================================================
+    -- FENÊTRE PRINCIPALE
+    -- ===========================================================
+    rollout rl_TestKeywords "MaxStack - Test Keywords (Step 9)" width:800 height:300
+    (
+        label  lbl_cat    "Category:"  pos:[20,20]  width:80  height:16
+        dotNetControl cbx_cat "System.Windows.Forms.ComboBox" pos:[100,18] width:200 height:21
+        
+        label  lbl_subcat "Subcat:"    pos:[20,45]  width:80  height:16
+        dotNetControl cbx_subcat "System.Windows.Forms.ComboBox" pos:[100,43] width:200 height:21
+        
+        button btn_ai     "AI Search"  pos:[320,18] width:100 height:45
+        button btn_done   "SAVE OK FILE ✔" pos:[440,18] width:150 height:45
+        
+        label  lbl_key    "Keywords:"  pos:[20,80]  width:590 height:16
+
+        dotNetControl cbx_k1  "System.Windows.Forms.ComboBox" pos:[20,100]  width:180 height:21
+        dotNetControl cbx_k2  "System.Windows.Forms.ComboBox" pos:[20,125]  width:180 height:21
+        dotNetControl cbx_k3  "System.Windows.Forms.ComboBox" pos:[20,150]  width:180 height:21
+        dotNetControl cbx_k4  "System.Windows.Forms.ComboBox" pos:[20,175]  width:180 height:21
+        dotNetControl cbx_k5  "System.Windows.Forms.ComboBox" pos:[20,200]  width:180 height:21
+        
+        dotNetControl cbx_k6  "System.Windows.Forms.ComboBox" pos:[220,100] width:180 height:21
+        dotNetControl cbx_k7  "System.Windows.Forms.ComboBox" pos:[220,125] width:180 height:21
+        dotNetControl cbx_k8  "System.Windows.Forms.ComboBox" pos:[220,150] width:180 height:21
+        dotNetControl cbx_k9  "System.Windows.Forms.ComboBox" pos:[220,175] width:180 height:21
+        dotNetControl cbx_k10 "System.Windows.Forms.ComboBox" pos:[220,200] width:180 height:21
+
+        dotNetControl cbx_k11 "System.Windows.Forms.ComboBox" pos:[420,100] width:180 height:21
+        dotNetControl cbx_k12 "System.Windows.Forms.ComboBox" pos:[420,125] width:180 height:21
+        dotNetControl cbx_k13 "System.Windows.Forms.ComboBox" pos:[420,150] width:180 height:21
+        dotNetControl cbx_k14 "System.Windows.Forms.ComboBox" pos:[420,175] width:180 height:21
+        dotNetControl cbx_k15 "System.Windows.Forms.ComboBox" pos:[420,200] width:180 height:21
+
+        on rl_TestKeywords open do
+        (
+            local kFields = #(cbx_k1,cbx_k2,cbx_k3,cbx_k4,cbx_k5,cbx_k6,cbx_k7,cbx_k8,cbx_k9,cbx_k10,cbx_k11,cbx_k12,cbx_k13,cbx_k14,cbx_k15)
+            local allCBX = #(cbx_cat, cbx_subcat)
+            join allCBX kFields
+
+            -- Initialisation du style gris des ComboBox
+            for c in allCBX do initDotNetCombobox c
+
+            -- 1. Remplir les Catégories
+            local catNames = #()
+            for d in database do append catNames d.catName
+            sort catNames
+            fillComboBox cbx_cat catNames
+
+            -- 2. Remplir TOUS les Keywords d'un coup grâce au Splash Screen !
+            if netKeywords_Cache != undefined do (
+                for kf in kFields do (
+                    kf.BeginUpdate()
+                    kf.Items.AddRange netKeywords_Cache
+                    kf.EndUpdate()
+                )
+            )
+
+            -- 3. Gérer le fichier OK (Auto-remplissage)
+            if maxFileName != "" do (
+                local txt_filename = (maxFilePath + maxFileName + "_CHECKED_OK.txt")
+                local fileExists   = doesFileExist txt_filename
+                local loaded_cat = ""; local loaded_subcat = ""; local loaded_keywords = #()
+
+                if fileExists then (
+                    local f = openFile txt_filename
+                    while not eof f do (
+                        local line = trimLeft (trimRight (readLine f))
+                        if line != "" do (
+                            if   (matchPattern line pattern:"--*") then loaded_subcat = substring line 3 -1
+                            else if (matchPattern line pattern:"-*") then loaded_cat = substring line 2 -1
+                            else if line != (sysInfo.username as string) then append loaded_keywords line
+                        )
+                    )
+                    close f
+
+                    if loaded_cat != "" do (
+                        cbx_cat.Text = loaded_cat
+                        local foundSubs = #()
+                        for d in database do (
+                            if d.catName == loaded_cat do (
+                                for s in d.subcats do append foundSubs s; sort foundSubs; exit
+                            )
+                        )
+                        fillComboBox cbx_subcat foundSubs
+                    )
+                    if loaded_subcat != "" do cbx_subcat.Text = loaded_subcat
+                    local idx = 1
+                    for k in loaded_keywords do (
+                        if idx <= 15 do ( kFields[idx].Text = k; idx += 1 )
+                    )
+
+                ) else (
+                    -- Déduction via le chemin des dossiers
+                    local searchPathFolders = filterString maxFilePath "\\"
+                    if searchPathFolders.count >= 3 do (
+                        local folderCat = searchPathFolders[3]
+                        for d in database do (
+                            if (d.catName == folderCat) or ((d.catName + "s") == folderCat) do (
+                                cbx_cat.Text = d.catName
+                                local subs = #()
+                                for s in d.subcats do append subs s
+                                sort subs
+                                fillComboBox cbx_subcat subs
+                                exit
+                            )
+                        )
+                    )
+                    if searchPathFolders.count >= 4 do (
+                        local folderSub = searchPathFolders[4]
+                        local currentSubs = #()
+                        if cbx_cat.Text != "" then (
+                            for d in database do if d.catName == cbx_cat.Text do currentSubs = d.subcats
+                        ) else (
+                            for d in database do join currentSubs d.subcats
+                        )
+                        for s in currentSubs do (
+                            if (folderSub == s) or (folderSub == (s+"s")) or (matchPattern folderSub pattern:(s+"*")) do (
+                                cbx_subcat.Text = s; exit
+                            )
+                        )
+                    )
+                    if searchPathFolders.count >= 3 and (stricmp searchPathFolders[3] "BRANDS" == 0) do (
+                        for kf in kFields do ( if kf.Text == "" do ( kf.Text = "Brands"; exit ) )
+                    )
+                    if searchPathFolders.count >= 3 and (stricmp searchPathFolders[3] "dimensiva" == 0) do (
+                        for kf in kFields do ( if kf.Text == "" do ( kf.Text = "Dimensiva"; exit ) )
+                    )
+                )
+            )
+        )
+
+        -- Cet événement fonctionne à nouveau car on utilise un dotNetControl classique !
+        on cbx_cat SelectedIndexChanged s e do (
+            local subs = #()
+            for d in database do (
+                if d.catName == s.Text do (
+                    for s in d.subcats do append subs s
+                    sort subs
+                    exit
+                )
+            )
+            fillComboBox cbx_subcat subs
+        )
+
+        on btn_ai pressed do (
+            local aiResults = getAiKeywords()
+            if aiResults.count > 0 do (
+                local kFields = #(cbx_k1,cbx_k2,cbx_k3,cbx_k4,cbx_k5,cbx_k6,cbx_k7,cbx_k8,cbx_k9,cbx_k10,cbx_k11,cbx_k12,cbx_k13,cbx_k14,cbx_k15)
+                local idx = 1
+                for kf in kFields do (
+                    if kf.Text == "" and idx <= aiResults.count do (
+                        kf.Text = aiResults[idx]
+                        idx += 1
+                    )
+                )
+            )
+        )
+
+        on btn_done pressed do (
+            if maxFileName == "" then ( messageBox "Veuillez d'abord sauvegarder la scène."; return false )
+            local txt_filename = (maxFilePath + maxFileName + "_CHECKED_OK.txt")
+            local txt_file = createfile txt_filename
+            
+            if cbx_cat.Text != "" then format ("-" + cbx_cat.Text + "\n") to:txt_file else format ("-.None\n") to:txt_file
+            if cbx_subcat.Text != "" then format ("--" + cbx_subcat.Text + "\n") to:txt_file
+            
+            local kFields = #(cbx_k1,cbx_k2,cbx_k3,cbx_k4,cbx_k5,cbx_k6,cbx_k7,cbx_k8,cbx_k9,cbx_k10,cbx_k11,cbx_k12,cbx_k13,cbx_k14,cbx_k15)
+            for kf in kFields do ( if kf.Text != "" do format (kf.Text + "\n") to:txt_file )
+            
+            format (sysInfo.username as string) to:txt_file
+            close txt_file
+            messageBox ("Fichier généré avec succès à :\n" + txt_filename) title:"Done"
+        )
+    )
+
+    -- ===========================================================
+    -- FENÊTRE DE CHARGEMENT (SPLASH SCREEN)
+    -- ===========================================================
+    rollout rl_Splash "Initialisation..." width:260 height:70
+    (
+        label lbl_load "⏳ Chargement des bases de données..." pos:[25,25]
+        timer tmr_load interval:50 active:true
+
+        on tmr_load tick do (
+            tmr_load.active = false
+
+            print "--- DÉBUT DU CHARGEMENT DES DONNÉES ---"
+
+            -- LOAD DB CSV
+            local csvPath = "C:\\Users\\" + sysInfo.username + "\\Documents\\3ds Max 2024\\Scripts\\_MyTools_Files_MapSearch_Categories_List.csv"
+            database = #()
+            if doesFileExist csvPath do (
+                local f = openFile csvPath
+                while not eof f do (
+                    local parts = filterString (readLine f) ";"
+                    if parts.count >= 2 do (
+                        local cName    = trimLeft (trimRight parts[1])
+                        local sName    = trimLeft (trimRight parts[2])
+                        local foundCat = undefined
+                        for d in database do ( if d.catName == cName do foundCat = d )
+                        if foundCat == undefined do ( foundCat = CategoryDataStruct catName:cName; append database foundCat )
+                        appendIfUnique foundCat.subcats sName
+                    )
+                )
+                close f
+            )
+            print "-> CSV Chargé."
+
+            -- LOAD KEYWORDS LIBRARY + PRÉ-CALCUL
+            local txtPathLib = "C:\\Users\\" + sysInfo.username + "\\Documents\\3ds Max 2024\\Scripts\\_MyTools_Files_MapSearch__Keywords_List.txt"
+            keyword_library = #()
+            if doesFileExist txtPathLib do (
+                local fLib = openFile txtPathLib
+                while not eof fLib do (
+                    local l = trimLeft (trimRight (readLine fLib))
+                    if l != "" do appendIfUnique keyword_library l
+                )
+                close fLib
+                sort keyword_library
+                
+                -- LA MAGIE EST ICI : On le transforme en objet .NET pendant que le splash screen est affiché !
+                netKeywords_Cache = toNetArray keyword_library 
+            )
+            print "-> Mots-clés Chargés."
+            print "--- FIN DU CHARGEMENT, OUVERTURE DE L'OUTIL ---"
+
+            -- Ferme le Splash et ouvre la fenêtre principale
+            DestroyDialog rl_Splash
+            CreateDialog rl_TestKeywords
+        )
+    )
+
+    -- Lancement : on ouvre d'abord le Splash
+    CreateDialog rl_Splash style:#(#style_toolwindow, #style_sysmenu)
+)

@@ -1,3 +1,21 @@
+/*
+================================================================================
+Script Name: Bitmap_Downscaler
+Category: MaxStack
+Description: Analyse et liste toutes les textures (bitmaps) de la scène pour 
+             les redimensionner afin d'optimiser la mémoire RAM et VRAM.
+             - Trigger if size : Déplace automatiquement les textures dépassant 
+               ce poids (en MB) dans la liste de traitement.
+             - Target dimension : Résolution maximale ciblée (en pixels).
+             - Refresh List : Scanne la scène et actualise la liste des bitmaps.
+             - Downscale Maps : Crée une copie réduite de la texture 
+               (suffixe _dsXXXX) et relinke la scène dessus.
+             - Recover : Ouvre un outil secondaire permettant de retrouver et 
+               de restaurer les fichiers originaux (Upscale).
+             - Copy : Copie le log de la liste de traitement (chemins et 
+               statuts de succès/erreur) dans le presse-papiers.
+================================================================================
+*/
 macroScript Bitmap_Downscaler
     category:"MaxStack" 
     tooltip:"Check all bitmaps in the scene and resize with conditions"

@@ -4,9 +4,25 @@
 -- ------------------------------------------------------
 
 (
-    -- 1. Chargement du Menu (3ds Max 2025+)
+    -- 1. Chargement du Menu (3ds Max 2026+)
     try (
-        systemTools.setEnvVariable "ADSK_3DSMAX_CUI_PRE_USER_CONFIG_2026" ("C:\\Users\\" + sysInfo.username + "\\Autodesk\\3ds Max 2026\\User Settings\\MaxStack.mnx")
+        local menuPath = "C:\\Users\\" + sysInfo.username + "\\Autodesk\\3ds Max 2026\\User Settings\\MaxStack.mnx"
+        local envVar = "ADSK_3DSMAX_CUI_PRE_USER_CONFIG_2026"
+        
+        -- On récupère les menus potentiellement déjà chargés par d'autres scripts
+        local existingMenus = systemTools.getEnvVariable envVar
+        
+        if existingMenus == undefined or existingMenus == "" then (
+            -- S'il n'y a rien, on assigne simplement notre menu
+            systemTools.setEnvVariable envVar menuPath
+        ) else (
+            -- Si d'autres menus existent, on vérifie qu'on ne fait pas de doublon
+            if matchPattern existingMenus pattern:("*" + menuPath + "*") == false then (
+                -- On ajoute notre menu à la liste existante, séparé par un point-virgule
+                systemTools.setEnvVariable envVar (existingMenus + ";" + menuPath)
+            )
+        )
+
         local menuMgr = maxops.GetICuiMenuMgr()
         menuMgr.LoadConfiguration(menuMgr.GetCurrentConfiguration())
         print "MaxStack menu loaded..."

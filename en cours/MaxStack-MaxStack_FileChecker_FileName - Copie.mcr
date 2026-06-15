@@ -258,26 +258,21 @@ try( DestroyDialog rlFileChecker )catch()
 
 rollout rlFileChecker "MapStack — File Checker" width:420 height:520
 (
-    -- Header
-    label lbl_title "FILE CHECKER" pos:[0,14]  width:420 height:20 align:#center
-    label lbl_step  "Step 1 — Filename" pos:[0,36] width:420 height:16 align:#center
-    label lbl_sep1  "______________________________________________" pos:[10,52] width:400 height:12
-
     -- Log
-    listBox lst_log "" pos:[10,68] width:400 height:8
+    listBox lst_log "" pos:[10,18] width:400 height:12
 
-    label lbl_sep2  "______________________________________________" pos:[10,212] width:400 height:12
+    label lbl_sep2  "__________________________________________________________________" pos:[10,192] width:400 height:12
 
     -- Préview du résultat
-    label lbl_prev_title "Preview :" pos:[10,228] width:400 height:16
-    edittext edt_before "" pos:[10,248] width:400 height:22 readOnly:true
-    label lbl_arrow "▼" pos:[195,274] width:30 height:18 align:#center
-    edittext edt_after  "" pos:[10,294] width:400 height:22 readOnly:true
+    label lbl_prev_title "Preview :" pos:[10,208] width:400 height:16
+    edittext edt_before "" pos:[10,228] width:400 height:22 readOnly:true
+    label lbl_arrow "▼" pos:[195,254] width:30 height:18 align:#center
+    edittext edt_after  "" pos:[10,274] width:400 height:22 readOnly:true
 
-    label lbl_sep3  "______________________________________________" pos:[10,322] width:400 height:12
+    label lbl_sep3  "__________________________________________________________________" pos:[10,302] width:400 height:12
 
     -- Grand bouton central
-    button btn_main "CHECK\nFILENAME" pos:[110,340] width:200 height:120 align:#center
+    button btn_main "CHECK\nFILENAME" pos:[140,350] width:120 height:120 align:#center
 
     -- Bouton confirmer (visible seulement step 2)
     button btn_confirm "✓  RENAME FILE ON DISK" pos:[60,475] width:300 height:32 enabled:false visible:false

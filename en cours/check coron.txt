@@ -1,0 +1,169 @@
+fn getScenePathSafe =
+(
+    if maxFilePath == "" then
+    (
+        messagebox "Scene must be saved first."
+        undefined
+    )
+    else
+    (
+        maxFilePath + maxFileName
+    )
+)
+
+fn collectMaterials mat collected =
+(
+    if mat == undefined then return collected
+
+    if (findItem collected mat) == 0 do append collected mat
+
+    -- Multi/Sub-Object
+    if superclassof mat == MaterialContainer then
+    (
+        for i = 1 to mat.numsubs do
+        (
+            collected = collectMaterials mat[i] collected
+        )
+    )
+
+    collected
+)
+
+fn isAllowedCoronaMaterial mat =
+(
+    if mat == undefined then return true
+
+    local ok = false
+
+    case (classof mat) of
+    (
+        CoronaMtl: ok = true
+        CoronaPhysicalMtl: ok = true
+        StandardMaterial: ok = false
+        VRayMtl: ok = false
+        PhysicalMaterial: ok = false
+        default: ok = false
+    )
+
+    ok
+)
+
+fn getUsedMaterials =
+(
+    local mats = #()
+
+    for o in objects do
+    (
+        if o.material != undefined do
+            append mats o.material
+    )
+
+    -- remove duplicates
+    makeUniqueArray mats
+    mats
+)
+
+fn checkSceneMaterials =
+(
+    local mats = getUsedMaterials()
+    local badMats = #()
+
+    for m in mats do
+    (
+        case (classof m) of
+        (
+            CoronaMtl: ()
+            CoronaPhysicalMtl: ()
+			Multimaterial: ()
+			CoronaLightMtl: ()
+            default:
+            (
+                append badMats m
+            )
+        )
+    )
+
+    if badMats.count > 0 then
+    (
+        format "INVALID USED MATERIALS:\n"
+        for m in badMats do format " - % : %\n" (classof m) m.name
+
+        messageBox "Non-Corona materials are still ASSIGNED to objects."
+        return false
+    )
+
+    true
+)
+
+fn isCoronaRenderer =
+(
+    classof renderers.current == CoronaRenderer
+)
+
+fn validateScene =
+(
+    local proceed = true
+
+    if not isCoronaRenderer() then
+    (
+        local res = queryBox "Scene is NOT using Corona Renderer.\n\nYou should convert it manually before continuing.\n\nDo you want to continue anyway?" title:"Corona Warning"
+
+        if not res then
+            proceed = false
+    )
+
+    if proceed and not checkSceneMaterials() then
+        proceed = false
+
+    proceed
+)
+	
+fn cleanResetCoronaScene deleteBackup:true =
+(
+    local scenePath = getScenePathSafe()
+    if scenePath == undefined then return false
+
+    -- STOP if not Corona
+	if not validateScene() then return false
+
+    local dir = maxFilePath
+    local name = getFilenameFile maxFileName
+
+    local backupPath = dir + name + "_backup.max"
+    local tempExport = dir + name + "_CLEAN.max"
+
+    format "Corona detected → proceeding clean reset\n"
+
+    -- Select ALL (including hidden)
+    select (for o in objects collect o)
+
+    -- Backup original scene
+    saveMaxFile backupPath quiet:true
+
+    -- Export clean geometry/material scene
+    exportFile tempExport #noPrompt selectedOnly:true using:MaxExporter
+
+    -- Load cleaned scene (no reset / no maxstart)
+    loadMaxFile tempExport quiet:true useFileUnits:true
+
+    -- Safety check
+    if objects.count == 0 then
+    (
+        messagebox "ERROR: Scene is empty after reload. Restoring backup."
+        loadMaxFile backupPath quiet:true
+        return false
+    )
+
+    -- Overwrite original file
+    saveMaxFile scenePath quiet:true
+
+    -- Cleanup temp files
+    if doesFileExist tempExport then deleteFile tempExport
+    if deleteBackup AND doesFileExist backupPath then deleteFile backupPath
+
+    format "Clean reset completed successfully\n"
+    true
+)
+
+-- RUN
+cleanResetCoronaScene deleteBackup:true

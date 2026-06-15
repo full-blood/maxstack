@@ -14,6 +14,20 @@ set count=1
 :: --- Create output folder if needed ---
 if not exist "%outdir%" mkdir "%outdir%"
 
+:: --- Copie MaxStack.mnx depuis 3ds Max vers src ---
+set "mnxsrc=C:\Users\%USERNAME%\Autodesk\3ds Max 2026\User Settings\MaxStack.mnx"
+set "mnxdst=%srcdir%\MaxStack.mnx"
+
+if exist "%mnxsrc%" (
+    copy /Y "%mnxsrc%" "%mnxdst%" >nul
+    echo MaxStack.mnx copie depuis 3ds Max vers src.
+) else (
+    echo AVERTISSEMENT : MaxStack.mnx introuvable dans 3ds Max User Settings.
+    echo Chemin verifie : %mnxsrc%
+    echo Le build continue avec l'ancienne version si elle existe.
+)
+echo.
+
 :: --- Lecture et Auto-Increment de la version ---
 set "versionfile=%repodir%version.txt"
 if not exist "%versionfile%" (
@@ -94,6 +108,16 @@ set "installfile=%outdir%\install_scripts.ms"
 >>"%installfile%" echo safeCopy (tempDir + "MaxStack_loader.ms")  maxstackLoaderPath
 >>"%installfile%" echo safeCopy (tempDir + "version.txt")         maxstackVersionPath
 >>"%installfile%" echo.
+>>"%installfile%" echo -- -----------------------------------------------
+>>"%installfile%" echo -- Nettoyage des anciens fichiers "MaxStack-" et "MaxStack_" dans userMacros
+>>"%installfile%" echo -- -----------------------------------------------
+>>"%installfile%" echo oldFiles = getFiles (userMacroDir + "\\MaxStack-*.mcr")
+>>"%installfile%" echo join oldFiles (getFiles (userMacroDir + "\\MaxStack_*.mcr"))
+>>"%installfile%" echo for f in oldFiles do (
+>>"%installfile%" echo     deleteFile f
+>>"%installfile%" echo     format "Supprime : %%\n" f
+>>"%installfile%" echo )
+>>"%installfile%" echo.
 >>"%installfile%" echo genericFiles = #(
 
 set first=1
@@ -134,15 +158,15 @@ for %%F in ("%srcdir%\*") do (
 >>"%installfile%" echo -- Rechargement du Menu (3ds Max 2025+)
 >>"%installfile%" echo -- -----------------------------------------------
 >>"%installfile%" echo try (
->>"%installfile%" echo     local menuMgr = maxops.GetICuiMenuMgr()
->>"%installfile%" echo     menuMgr.LoadConfiguration maxstackMNXPath
->>"%installfile%" echo     print "Menu charge avec succes !"
+>>"%installfile%" echo     -- On execute le loader qui vient d'etre installe pour inscrire la variable d'environnement
+>>"%installfile%" echo     fileIn maxstackLoaderPath
+>>"%installfile%" echo     print "Menu MaxStack charge avec succes !"
 >>"%installfile%" echo ) catch (
 >>"%installfile%" echo     format "Erreur lors du chargement du menu : %%\n" (getCurrentException())
 >>"%installfile%" echo )
 >>"%installfile%" echo.
 >>"%installfile%" echo print "Installation terminée."
->>"%installfile%" echo messageBox "Maxstack v%currentver% installée avec succès !\n\nLe menu a été mis à jour."
+>>"%installfile%" echo messageBox "MaxStack v%currentver% installée avec succès !\n\nLe menu a été mis à jour."
 >>"%installfile%" echo print "-- END --"
 
 echo install_scripts.ms generated.
@@ -179,21 +203,31 @@ echo  Archive : %mzpfile%
 echo ============================================
 echo.
 
-:: --- Git push ---
-set /p dopublish="Publier sur GitHub (git add/commit/push) ? (o/n) : "
+:: --- Git push & GitHub Release ---
+set /p dopublish="Publier sur GitHub et creer la release automatique ? (o/n) : "
 if /I not "%dopublish%"=="o" goto done
 
 pushd "%repodir%"
+:: 1. On pousse le code sur le repo
+echo.
+echo Envoi du code sur GitHub...
 git add .
 git commit -m "release v%currentver%"
 git push
+
+:: 2. On cree la release et on attache le .mzp
+echo.
+echo Creation de la Release GitHub v%currentver%...
+gh release create "v%currentver%" "MaxStack.mzp" --title "Mise a jour %currentver%" --generate-notes
+pause
+
 popd
 
 echo.
-echo Pushed. Cree la Release sur GitHub :
-echo https://github.com/full-blood/maxstack/releases/new
-echo Tag : v%currentver%
-echo Asset a uploader : MaxStack.mzp
+echo ============================================
+echo  Succes ! Release v%currentver% publiee.
+echo  Verifie ici : https://github.com/full-blood/maxstack/releases/latest
+echo ============================================
 
 :done
 echo.
