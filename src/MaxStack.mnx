@@ -87,4 +87,18 @@
     <CreateMenu ParentId="25b0a868-5954-4e8c-9697-2c84a412440f" MenuId="6ed28690-fda3-4089-8cf3-231227441179" Title="Help" BeforeId="51a22fa5-e5b9-4b73-8753-f8af68d0e464"/>
     <MoveItem DestinationId="6ed28690-fda3-4089-8cf3-231227441179" ItemId="51a22fa5-e5b9-4b73-8753-f8af68d0e464"/>
     <CreateMenuAction MenuId="6ed28690-fda3-4089-8cf3-231227441179" Id="91036ef7-80e7-4926-bcb5-37cb0030f79e" ActionId="647394-MaxStack_ScriptManager`MaxStack" BeforeId="51a22fa5-e5b9-4b73-8753-f8af68d0e464"/>
+    <DeleteItem Id="629ae547-17d8-4a91-bd64-4b1c25ceff70"/>
+    <DeleteItem Id="0db9ec8c-226a-40a8-816d-718daae7f8fe"/>
+    <DeleteItem Id="f6f53bbb-fbd3-462a-8d90-c3fb614bc07c"/>
+    <DeleteItem Id="4321ace6-3838-4528-b614-092282fd6bfa"/>
+    <DeleteItem Id="3eb3f835-afae-43dd-8d1c-a55415eb7a32"/>
+    <DeleteItem Id="84a69fd4-4c59-46b4-a5ca-0e0c66c28561"/>
+    <DeleteItem Id="d3564e68-ab86-4126-8c01-6543f0921f6d"/>
+    <CreateMenu ParentId="25b0a868-5954-4e8c-9697-2c84a412440f" MenuId="b34487de-0ef7-4ac6-935f-8650f93f88bf" Title="Render" BeforeId="6d47d29a-f50e-409c-88bd-46c58bf8cb22"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="6d47d29a-f50e-409c-88bd-46c58bf8cb22" BeforeId="88d92a74-166b-4775-a581-5aea8ce30c5c"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="6d47d29a-f50e-409c-88bd-46c58bf8cb22" BeforeId="6ed28690-fda3-4089-8cf3-231227441179"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="6d47d29a-f50e-409c-88bd-46c58bf8cb22" BeforeId="707a852c-d4c8-41db-8c98-2c428d62a990"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="b34487de-0ef7-4ac6-935f-8650f93f88bf" BeforeId="88d92a74-166b-4775-a581-5aea8ce30c5c"/>
+    <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="a1cabd25-3b74-4b1b-aa1e-56581c164e78" ActionId="647394-MaxStack_Cameras_Exclude_Manager`MaxStack" BeforeId="88d92a74-166b-4775-a581-5aea8ce30c5c"/>
+    <MoveItem DestinationId="b34487de-0ef7-4ac6-935f-8650f93f88bf" ItemId="a1cabd25-3b74-4b1b-aa1e-56581c164e78"/>
 </MaxMenuTransformations>
