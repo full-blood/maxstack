@@ -18,8 +18,6 @@ rollout pastClipboardImg "Paste Clipboard Image" width:220 height:110 (
 	fn PropBitmap = (
 		undo on (
 		if selection.count == 1 then (
-			resetxform $
-			maxOps.CollapseNode $ off
 			global bitmg = "" as string
 			try(bitmg = (sceneMaterials[$.material.name].texmapDiffuse.filename) as string)catch()
 			try(bitmg = (sceneMaterials[$.material.name].base_color_map.bitmap) as string )catch()
@@ -34,11 +32,47 @@ rollout pastClipboardImg "Paste Clipboard Image" width:220 height:110 (
 			try(global img = (dotNetClass "System.Drawing.Image").FromFile bitmg)catch(messageBox "no image found")
 			format "image width : % / height : %\n" img.Width img.Height
 			prop = (img.Width as float) / (img.Height as float)
-			height = ($.max - $.min).y
-			Nwidth = height*prop
-			width = ($.max - $.min).x
-			Nwidth = Nwidth/width
-			$.scale = [Nwidth, 1, 1]
+			bb = nodeGetBoundingBox $ $.transform
+			dims = bb[2] - bb[1]
+			scaleVec = $.scale
+			scaleAxis = 1
+			refScale = scaleVec.y
+			
+			if dims.z <= dims.x and dims.z <= dims.y then
+			(
+				width = dims.x
+				height = dims.y
+				scaleAxis = 1
+				refScale = scaleVec.y
+			)
+			else if dims.y <= dims.x and dims.y <= dims.z then
+			(
+				width = dims.x
+				height = dims.z
+				scaleAxis = 1
+				refScale = scaleVec.z
+			)
+			else
+			(
+				width = dims.y
+				height = dims.z
+				scaleAxis = 2
+				refScale = scaleVec.z
+			)
+			
+			if width <= 0 or height <= 0 do
+			(
+				messageBox "Plane dimensions are invalid."
+				return false
+			)
+			
+			newScale = (height * refScale * prop) / width
+			if scaleAxis == 1 then
+				scaleVec.x = newScale
+			else
+				scaleVec.y = newScale
+			
+			$.scale = scaleVec
 		)else (messageBox "please select one plane")
 		)
 	)

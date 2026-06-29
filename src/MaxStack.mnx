@@ -101,4 +101,17 @@
     <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="b34487de-0ef7-4ac6-935f-8650f93f88bf" BeforeId="88d92a74-166b-4775-a581-5aea8ce30c5c"/>
     <CreateMenuAction MenuId="25b0a868-5954-4e8c-9697-2c84a412440f" Id="a1cabd25-3b74-4b1b-aa1e-56581c164e78" ActionId="647394-MaxStack_Cameras_Exclude_Manager`MaxStack" BeforeId="88d92a74-166b-4775-a581-5aea8ce30c5c"/>
     <MoveItem DestinationId="b34487de-0ef7-4ac6-935f-8650f93f88bf" ItemId="a1cabd25-3b74-4b1b-aa1e-56581c164e78"/>
+    <CreateMenuAction MenuId="b34487de-0ef7-4ac6-935f-8650f93f88bf" Id="050482f1-d334-41dd-a705-3899b81435b8" ActionId="647394-MaxStack_Cameras_Exclude_Manager`MaxStack" BeforeId="a1cabd25-3b74-4b1b-aa1e-56581c164e78"/>
+    <DeleteItem Id="a1cabd25-3b74-4b1b-aa1e-56581c164e78"/>
+    <DeleteItem Id="050482f1-d334-41dd-a705-3899b81435b8"/>
+    <CreateMenuAction MenuId="b34487de-0ef7-4ac6-935f-8650f93f88bf" Id="0f3dec40-e3e6-4ddd-b521-329c434f2f8d" ActionId="647394-MaxStack_Cameras_Exclude_Manager`MaxStack"/>
+    <CreateMenu ParentId="25b0a868-5954-4e8c-9697-2c84a412440f" MenuId="63f22d24-ff7a-4519-befc-c69eb3011582" Title="Group" BeforeId="707a852c-d4c8-41db-8c98-2c428d62a990"/>
+    <MoveItem DestinationId="25b0a868-5954-4e8c-9697-2c84a412440f" ItemId="707a852c-d4c8-41db-8c98-2c428d62a990" BeforeId="5504ae84-d669-4e1f-8553-31b0f91710b8"/>
+    <MoveItem DestinationId="63f22d24-ff7a-4519-befc-c69eb3011582" ItemId="a675708c-a45b-4166-b20f-f29acb4fd476"/>
+    <MoveItem DestinationId="63f22d24-ff7a-4519-befc-c69eb3011582" ItemId="fe06c6c1-65c4-4c75-8b69-4e09348ec046"/>
+    <MoveItem DestinationId="63f22d24-ff7a-4519-befc-c69eb3011582" ItemId="a45be53c-7629-497b-9e80-7b8bb9f1dbaa"/>
+    <CreateMenuAction MenuId="6d47d29a-f50e-409c-88bd-46c58bf8cb22" Id="c2ae1fb4-e409-4695-a10b-da406eb92ca9" ActionId="647394-MaxStack_Aligner`MaxStack"/>
+    <MoveItem DestinationId="5504ae84-d669-4e1f-8553-31b0f91710b8" ItemId="c2ae1fb4-e409-4695-a10b-da406eb92ca9" BeforeId="b5c1a827-e620-4631-b7da-a6ca3f8623f3"/>
+    <DeleteItem Id="c2ae1fb4-e409-4695-a10b-da406eb92ca9"/>
+    <CreateMenuAction MenuId="5504ae84-d669-4e1f-8553-31b0f91710b8" Id="041cd7fc-3983-4e04-8a31-09b023a4616a" ActionId="647394-MaxStack_Aligner`MaxStack"/>
 </MaxMenuTransformations>

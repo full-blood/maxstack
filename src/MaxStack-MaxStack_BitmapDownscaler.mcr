@@ -71,23 +71,33 @@ fn getOriginalPath fromPath =
     if parts.count > 0 do
     (
         local lastPart = parts[parts.count]
-        -- On vérifie que la dernière partie commence par "ds" et qu'elle contient des caractères après
         if lastPart.count > 2 and (substring lastPart 1 2) == "ds" do
         (
             local restStr = substring lastPart 3 (lastPart.count - 2)
-            -- On s'assure que ce qui suit "ds" sont exclusivement des chiffres (ex: 1024, 2048)
             if (restStr as integer) != undefined do
             (
-                -- Reconstruire le nom sans le "_dsXXXX"
                 origName = substring baseName 1 (baseName.count - lastPart.count - 1)
             )
         )
     )
     
-    if origName != baseName then
-        return (getFilenamePath fromPath) + origName + fileExt
-    else
-        return undefined
+    if origName == baseName do return undefined
+
+    local dirPath = getFilenamePath fromPath
+    local sameExtPath = dirPath + origName + fileExt
+    if doesFileExist sameExtPath do return sameExtPath
+
+    local candidateExts = #( ".png", ".jpg", ".jpeg", ".tif", ".tiff", ".tga", ".bmp", ".exr", ".hdr", ".psd", ".webp" )
+    for ext in candidateExts do
+    (
+        local candidatePath = dirPath + origName + ext
+        if doesFileExist candidatePath do return candidatePath
+    )
+
+    local matches = getFiles (dirPath + origName + ".*")
+    if matches.count > 0 do return matches[1]
+
+    undefined
 )
 
 
@@ -170,7 +180,7 @@ rollout BitmapRecoverer "Recover Original Maps" width:700 height:450
 -- ==========================================
 -- ROLLOUT 1 : DOWNSCALER (MAIN)
 -- ==========================================
-rollout BitmapDownscaler "Bitmap Downscaler" width:820 height:540
+rollout BitmapDownscaler "Bitmap Downscaler" width:940 height:540
 (
     -- UI ELEMENTS
     label lbl1 "Trigger if Size > (MB):" pos:[20,20] width:120
@@ -178,25 +188,28 @@ rollout BitmapDownscaler "Bitmap Downscaler" width:820 height:540
 
     label lbl2 "Target Dimension (px):" pos:[220,20] width:130
     spinner sp_max "" range:[32,8192,1024] type:#integer pos:[350,18] width:80
+    checkbox chk_jpg "convert to .jpg" pos:[450,20] width:110 checked:false
 
     -- Boutons réorganisés pour faire de la place au bouton Recover
-    button btn_scan "Refresh List" pos:[440,15] width:90 height:28
-    button btn_downscale "Downscale Maps" pos:[540,15] width:100 height:28
-    button btn_recover "Recover" pos:[650,15] width:80 height:28 tooltip:"Ouvrir l'outil de restauration des textures"
-    button btn_copy "Copy" pos:[740,15] width:60 height:28
+    button btn_scan "Refresh List" pos:[570,15] width:90 height:28
+    button btn_downscale "Downscale Maps" pos:[670,15] width:100 height:28
+    button btn_recover "Recover" pos:[780,15] width:80 height:28 tooltip:"Ouvrir l'outil de restauration des textures"
+    button btn_copy "Copy" pos:[870,15] width:50 height:28
 
     label lbl_all "Available Maps (Ignored):" pos:[20,60] width:200
-    label lbl_sel "Maps to Downscale:" pos:[450,60] width:200
+    label lbl_sel "Maps to Downscale:" pos:[500,60] width:200
 
     -- .NET ListBoxes avec Scrollbars
-    dotNetControl lb_all "System.Windows.Forms.ListBox" pos:[20,80] width:350 height:440
-    dotNetControl lb_sel "System.Windows.Forms.ListBox" pos:[450,80] width:350 height:440
+    dotNetControl lb_all "System.Windows.Forms.ListBox" pos:[20,80] width:420 height:440
+    dotNetControl lb_sel "System.Windows.Forms.ListBox" pos:[500,80] width:420 height:440
 
-    button btn_add ">>" pos:[395,240] width:30 height:30 tooltip:"Add selected to Downscale list"
-    button btn_rem "<<" pos:[395,290] width:30 height:30 tooltip:"Remove selected from Downscale list"
+    button btn_add ">>" pos:[455,240] width:30 height:30 tooltip:"Add selected to Downscale list"
+    button btn_rem "<<" pos:[455,290] width:30 height:30 tooltip:"Remove selected from Downscale list"
 
     -- VARIABLES
     local pythonScript = "L:\\0-Documentation\\3DS Max Configuration\\3DS Max Plugins\\Antoine\\API\\scripts\\resize_bitmap.py"
+    local convertPythonScript = "L:\\0-Documentation\\3DS Max Configuration\\3DS Max Plugins\\Antoine\\API\\scripts\\convert_bitmap.py"
+    local portablePythonExe = "L:\\0-Documentation\\3DS Max Configuration\\3DS Max Plugins\\Antoine\\API\\python\\python.exe"
     local pythonExe = ""
     local cachedMapList = #() 
 
@@ -226,11 +239,12 @@ rollout BitmapDownscaler "Bitmap Downscaler" width:820 height:540
         if doesFileExist path then (getFileSize path as float) / 1024 / 1024 else -1.0
     )
 
-    fn runPythonSilentWait path maxDim =
+    fn runPythonSilentWait path maxDim convertToJpg =
     (
         if pythonExe == "" do return false
         local qPython = "\"" + pythonExe + "\""
-        local qScript = "\"" + pythonScript + "\""
+        local activeScript = if convertToJpg then convertPythonScript else pythonScript
+        local qScript = "\"" + activeScript + "\""
         local qPath   = "\"" + path + "\""
         local sDim    = maxDim as string
         
@@ -294,7 +308,10 @@ rollout BitmapDownscaler "Bitmap Downscaler" width:820 height:540
         initListBox lb_all
         initListBox lb_sel
         
-        pythonExe = autoFindPython()
+        if doesFileExist portablePythonExe then
+            pythonExe = portablePythonExe
+        else
+            pythonExe = autoFindPython()
         scanAndDisplay()
     )
 
@@ -355,6 +372,12 @@ rollout BitmapDownscaler "Bitmap Downscaler" width:820 height:540
             return false
         )
 
+        if chk_jpg.checked and not (doesFileExist convertPythonScript) do
+        (
+            messageBox ("Impossible de trouver convert_bitmap.py :\n" + convertPythonScript) title:"Erreur"
+            return false
+        )
+
         local count = lb_sel.Items.count
         if count == 0 do
         (
@@ -396,15 +419,16 @@ rollout BitmapDownscaler "Bitmap Downscaler" width:820 height:540
                 -- NOUVEAU SUFFIXE : Ajout de _ds devant la résolution
                 local targetSuffix = "_ds" + (sp_max.value as string)
                 
-                local pythonOutPath = (getFilenamePath path) + (getFilenameFile path) + "_small" + (getFilenameType path)
-                local finalPath = (getFilenamePath path) + (getFilenameFile path) + targetSuffix + (getFilenameType path)
+                local targetExt = if chk_jpg.checked then ".jpg" else (getFilenameType path)
+                local pythonOutPath = (getFilenamePath path) + (getFilenameFile path) + "_small" + targetExt
+                local finalPath = (getFilenamePath path) + (getFilenameFile path) + targetSuffix + targetExt
 
                 local success = false
                 local attempts = 0
                 
                 while attempts < 2 and not success do
                 (
-                    runPythonSilentWait path sp_max.value
+                    runPythonSilentWait path sp_max.value chk_jpg.checked
                     
                     local waitCount = 0
                     while (not (doesFileExist pythonOutPath)) and (waitCount < 30) do 

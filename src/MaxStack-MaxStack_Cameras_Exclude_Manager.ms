@@ -29,10 +29,10 @@ rollout cam_Incl "Include/Exclude object(s) to cameras" width:660 height:470
 	multiListBox 'lbx1' "camera(s) list : " pos:[20,20] width:300 height:25 align:#left
 	multiListBox 'lbx3' "exclude list :" pos:[340,20] width:300 height:25 align:#left
 	button 'btn7' "get selected camera(s)" pos:[20,380] width:139 height:29 align:#left
-	button 'btn6' "store selection" pos:[175,380] width:139 height:29 align:#left
+	button 'btn13' "get camera from viewport" pos:[175,380] width:139 height:29 align:#left
 	
 	label 'lb_1' "List item(s) :" pos:[340,380] width:100 height:29 align:#left
-	button 'btn12' "selecte items" pos:[430,380] width:100 height:29 align:#left
+	button 'btn12' "select items" pos:[430,380] width:100 height:29 align:#left
 	button 'btn8' "delete selected" pos:[540,380] width:100 height:29 align:#left
 	
 	label 'lb_2' "Scene object(s) :" pos:[340,420] width:100 height:29 align:#left
@@ -40,12 +40,22 @@ rollout cam_Incl "Include/Exclude object(s) to cameras" width:660 height:470
 	button 'btn11' "delete selected" pos:[540,420] width:100 height:29 align:#left
 	
 	button 'btn_help' "Help" pos:[20,420] width:80 height:29 align:#left
+	button 'btn6' "store selection" pos:[115,420] width:199 height:29 align:#left
+	timer tmr_refreshAfterUndo interval:100 active:false
 	
 	fn updateExcludeList =
 	(
 		sel_item = lbx1.selection
 		sel_item = sel_item as Array
+		if sel_item.count == 0 do (
+			lbx3.items = #()
+			return false
+		)
 		selected_cam = getNodeByName lbx1.items[sel_item[1]]
+		if selected_cam == undefined do (
+			lbx3.items = #()
+			return false
+		)
 		exludeObj_list = #()
 		for i in selected_cam.excludeList do (
 			try(appendIfUnique exludeObj_list (i.name as string))catch(print "object does'nt exist anymore")
@@ -53,9 +63,35 @@ rollout cam_Incl "Include/Exclude object(s) to cameras" width:660 height:470
 		sort exludeObj_list
 		lbx3.items = exludeObj_list
 	)
+	fn selectCameraInList camNode =
+	(
+		if camNode == undefined do return false
+		if superclassof camNode != camera do return false
+		
+		local camIndex = findItem lbx1.items camNode.name
+		if camIndex == 0 do return false
+		
+		lbx1.selection = #(camIndex)
+		updateExcludeList()
+		true
+	)
+	fn refreshAfterUndoRedo =
+	(
+		try(tmr_refreshAfterUndo.active = true)catch()
+	)
 	on cam_Incl open do (
 		camera_list = for o in cameras where classof o != targetobject collect o.name
 		lbx1.items = camera_list
+		try(callbacks.removeScripts id:#MaxStackCameraExcludeRefresh)catch()
+		try(callbacks.addScript #sceneUndo "try(cam_Incl.refreshAfterUndoRedo())catch()" id:#MaxStackCameraExcludeRefresh)catch()
+		try(callbacks.addScript #sceneRedo "try(cam_Incl.refreshAfterUndoRedo())catch()" id:#MaxStackCameraExcludeRefresh)catch()
+	)
+	on cam_Incl close do (
+		try(callbacks.removeScripts id:#MaxStackCameraExcludeRefresh)catch()
+	)
+	on tmr_refreshAfterUndo tick do (
+		tmr_refreshAfterUndo.active = false
+		try(updateExcludeList())catch()
 	)
 	on btn2 picked obj do (
 		 if isValidNode obj do print (obj.name as string)
@@ -104,30 +140,42 @@ rollout cam_Incl "Include/Exclude object(s) to cameras" width:660 height:470
 	)
 	-- delete list obj
 	on btn8 pressed do (
-		objToDelete = (lbx3.items  as array)
-		sel_item = lbx1.selection
-		sel_item = sel_item as Array
-		selected_cam = getNodeByName lbx1.items[sel_item[1]]
-		for i in lbx3.selection do (
-			selIdx = (lbx3.selection as array)[1]
-			deleteItem objToDelete selIdx
-			deleteItem selected_cam.excludeList selIdx
-			lbx3.items = objToDelete
+		undo "Delete selected exclude list items" on (
+			objToDelete = (lbx3.items  as array)
+			sel_item = lbx1.selection
+			sel_item = sel_item as Array
+			if sel_item.count > 0 do (
+				selected_cam = getNodeByName lbx1.items[sel_item[1]]
+				selIndices = lbx3.selection as array
+				for idx = selIndices.count to 1 by -1 do (
+					selIdx = selIndices[idx]
+					deleteItem objToDelete selIdx
+					deleteItem selected_cam.excludeList selIdx
+				)
+				lbx3.items = objToDelete
+			)
 		)
 	)
 	-- delete scene obj
 	on btn11 pressed do (
-		
-		selectionObjects = for o in selection collect o
-		exludeObj_list = selected_cam.excludeList
-		deleteObj_list = #()
-		
-		for o in selectionObjects do (
-			 appendIfUnique deleteObj_list (findItem exludeObj_list o)
-		)
-		rev_deleteObj_list = for i = deleteObj_list.count to 1 by -1 collect deleteObj_list[i]
-		for i in rev_deleteObj_list do (
-			try(deleteItem exludeObj_list i)catch()
+		undo "Delete selected scene objects from exclude list" on (
+			sel_item = lbx1.selection as Array
+			if sel_item.count > 0 do selected_cam = getNodeByName lbx1.items[sel_item[1]]
+			
+			if selected_cam != undefined do (
+				selectionObjects = for o in selection collect o
+				exludeObj_list = selected_cam.excludeList
+				deleteObj_list = #()
+				
+				for o in selectionObjects do (
+					idx = findItem exludeObj_list o
+					if idx > 0 do appendIfUnique deleteObj_list idx
+				)
+				rev_deleteObj_list = for i = deleteObj_list.count to 1 by -1 collect deleteObj_list[i]
+				for i in rev_deleteObj_list do (
+					try(deleteItem exludeObj_list i)catch()
+				)
+			)
 		)
 		
 		updateExcludeList()
@@ -143,10 +191,17 @@ rollout cam_Incl "Include/Exclude object(s) to cameras" width:660 height:470
 		)
 		
 	)
+	on btn13 pressed do (
+		pickPoint prompt:"Click the viewport to read its camera."
+		viewportCamera = viewport.getCamera()
+		if not (selectCameraInList viewportCamera) do (
+			messageBox "The clicked viewport is not a camera view, or the camera is not in the list." title:"Camera From Viewport"
+		)
+	)
 	on btn6 pressed do (
 		if (substring btn6.text 1 10) != "add stored" then (
 			storeSel = #()
-			for o in selection where superclassof L != camera do (
+			for o in selection where superclassof o != camera do (
 				append storeSel o
 			)
 			btn6.text = ("add stored objects ("+(storeSel.count as string)+")")
@@ -190,30 +245,31 @@ rollout cam_Incl "Include/Exclude object(s) to cameras" width:660 height:470
 	-- HELP DIALOG LOGIC
 	on btn_help pressed do (
 		try(DestroyDialog help_cam_Incl)catch()
-		rollout help_cam_Incl "Aide : Gestionnaire d'Exclusion" width:750 height:750
+		rollout help_cam_Incl "Help: Cameras Exclude Manager" width:750 height:750
 		(
 			label help_text "Description :" pos:[15,15] width:720 height:700 readOnly:true
 			button btn_ok "OK" pos:[375,710] width:60 height:25
 
 			on help_cam_Incl open do (
-				help_text.text = "Ce script MaxScript permet de g rer facilement la liste d'objets exclus du rendu pour les cam ras s lectionn es dans la sc ne 3ds Max. \n\n" \
+				help_text.text = "This tool manages the render exclusion list for cameras in the current 3ds Max scene.\n\n" \
 								+ "--------------------------------------------------------\n\n" \
-								+ "PRINCIPAUX PANNEAUX\n\n" \
-								+ "- camera(s) list (Gauche) :\nAffiche la liste de toutes les cam ras de la sc ne (sauf les cam ras cibles standard).\n\n" \
-								+ "- exclude list (Droite) :\nAffiche les objets actuellement exclus du rendu pour la cam ra s lectionn e dans la liste de gauche.\n\n" \
+								+ "MAIN PANELS\n\n" \
+								+ "- camera(s) list (left):\nLists all scene cameras, excluding standard target objects.\n\n" \
+								+ "- exclude list (right):\nShows the objects currently excluded for the selected camera.\n\n" \
 								+ "--------------------------------------------------------\n\n" \
-								+ "BOUTONS DE GESTION\n\n" \
-								+ "- get selected camera(s) :\nS lectionne dans la liste de gauche les cam ras actuellement s lectionn es dans la sc ne.\n\n" \
-								+ "- store selection :\nM morise les objets s lectionn s dans la sc ne.\n(Le texte du bouton change pour afficher le compte d'objets stock s. Clic Droit pour r initialiser la m moire).\n\n" \
-								+ "- add selected (Scene object(s)) :\nAjoute les objets s lectionn s dans la sc ne   la liste d'exclusion des cam ras s lectionn es dans la liste de gauche.\n\n" \
-								+ "- selecte items (List item(s)) :\nS lectionne dans la sc ne les objets qui sont s lectionn s dans la liste d'exclusion (Droite).\n\n" \
-								+ "- delete selected (List item(s)) :\nRetire les objets s lectionn s de la liste d'exclusion de la cam ra active.\n\n" \
-								+ "- delete selected (Scene object(s)) :\nRetire les objets s lectionn s dans la sc ne de la liste d'exclusion de la cam ra (s'ils s'y trouvent d j ).\n\n" \
+								+ "MANAGEMENT BUTTONS\n\n" \
+								+ "- get selected camera(s):\nSelects in the left list the cameras currently selected in the scene.\n\n" \
+								+ "- get camera from viewport:\nClick a viewport, then the tool checks whether that viewport is a camera view. If it is, the matching camera is selected in the left list.\n\n" \
+								+ "- store selection:\nStores the current scene object selection. The button text changes to show how many objects are stored. Right-click this button to clear the stored selection.\n\n" \
+								+ "- add selected (Scene object(s)):\nAdds the selected scene objects to the exclusion list of the selected cameras.\n\n" \
+								+ "- select items (List item(s)):\nSelects in the scene the objects selected in the exclude list.\n\n" \
+								+ "- delete selected (List item(s)):\nRemoves the selected list entries from the active camera exclusion list. This action supports Undo.\n\n" \
+								+ "- delete selected (Scene object(s)):\nRemoves the selected scene objects from the active camera exclusion list when they are present. This action supports Undo.\n\n" \
 								+ "--------------------------------------------------------\n\n" \
-								+ "ACTIONS RAPIDES (Double-clics / Clic-droit)\n\n" \
-								+ "- Double-clic sur une cam ra :\nLa s lectionne dans la sc ne et met   jour le panneau d'exclusion (Droite).\n\n" \
-								+ "- Double-clic sur un objet exclu :\nLe s lectionne dans la sc ne.\n\n" \
-								+ "- Clic droit sur le panneau exclude list :\nS lectionne tous les objets s lectionn s dans cette liste dans la sc ne."
+								+ "QUICK ACTIONS\n\n" \
+								+ "- Double-click a camera:\nSelects that camera in the scene and updates the exclude list.\n\n" \
+								+ "- Double-click an excluded object:\nSelects that object in the scene.\n\n" \
+								+ "- Right-click the exclude list:\nSelects all highlighted exclude-list objects in the scene."
 			)
 
 			on btn_ok pressed do (
