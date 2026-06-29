@@ -2,7 +2,11 @@
 ================================================================================
 Script Name: Aligner
 Category: MaxStack
-Description: Cree un Tape temporaire depuis la selection courante, parent les objets selectionnes de premier niveau au Tape head, puis permet de recaler le target sur le head en X, Y ou Z. L'option 2D garde le target au meme niveau Z pendant la creation. Les boutons H et T selectionnent rapidement le Tape head ou le target.
+Description: Cree un Tape temporaire depuis la selection courante, parent les 
+             objets selectionnes de premier niveau au Tape head, puis permet de 
+             recaler le target sur le head en X, Y ou Z. L'option 2D garde le 
+             target au meme niveau Z pendant la creation. Les boutons H et T 
+             selectionnent rapidement le Tape head ou le target.
 ================================================================================
 */
 
