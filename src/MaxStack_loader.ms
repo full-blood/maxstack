@@ -4,6 +4,21 @@
 -- ------------------------------------------------------
 
 (
+    -- 0. Application d'une mise a jour differee
+    --    (si le loader etait verrouille lors de la derniere installation,
+    --     install_scripts.ms a depose un fichier ".new" a cote de celui-ci)
+    try (
+        local selfPath    = (GetDir #userStartupScripts) + "\\MaxStack_loader.ms"
+        local pendingFile = selfPath + ".new"
+        if doesFileExist pendingFile then (
+            deleteFile selfPath
+            renameFile pendingFile selfPath
+            print "MaxStack_loader.ms mis a jour depuis la version differee."
+        )
+    ) catch (
+        format "MaxStack Loader Error (Swap update) : %\n" (getCurrentException())
+    )
+
     -- 1. Chargement du Menu (3ds Max 2026+)
     try (
         local menuPath = "C:\\Users\\" + sysInfo.username + "\\Autodesk\\3ds Max 2026\\User Settings\\MaxStack.mnx"

@@ -96,16 +96,48 @@ set "installfile=%outdir%\install_scripts.ms"
 >>"%installfile%" echo     if doesFileExist src then (
 >>"%installfile%" echo         local dstDir = getFilenamePath dst
 >>"%installfile%" echo         if not doesFileExist dstDir then makeDir dstDir
->>"%installfile%" echo         if doesFileExist dst then deleteFile dst
->>"%installfile%" echo         (dotNetClass "System.IO.File").Copy src dst
->>"%installfile%" echo         format "copied %% to %%\n" src dst
+>>"%installfile%" echo         local ok = true
+>>"%installfile%" echo         if doesFileExist dst then (
+>>"%installfile%" echo             ok = deleteFile dst
+>>"%installfile%" echo         )
+>>"%installfile%" echo         if ok then (
+>>"%installfile%" echo             (dotNetClass "System.IO.File").Copy src dst
+>>"%installfile%" echo             format "copied %% to %%\n" src dst
+>>"%installfile%" echo             true
+>>"%installfile%" echo         ) else (
+>>"%installfile%" echo             format "WARNING: locked, could not overwrite %%\n" dst
+>>"%installfile%" echo             false
+>>"%installfile%" echo         )
 >>"%installfile%" echo     ) else (
 >>"%installfile%" echo         format "WARNING: not found: %%\n" src
+>>"%installfile%" echo         false
 >>"%installfile%" echo     )
 >>"%installfile%" echo )
 >>"%installfile%" echo.
->>"%installfile%" echo safeCopy (tempDir + "MaxStack.mnx")       maxstackMNXPath
->>"%installfile%" echo safeCopy (tempDir + "MaxStack_loader.ms")  maxstackLoaderPath
+>>"%installfile%" echo -- Le loader peut etre verrouille (fileIn en cours / instance precedente) :
+>>"%installfile%" echo -- on le copie sous forme de fichier ".new" et on laisse le loader
+>>"%installfile%" echo -- lui-meme faire le swap au prochain lancement (voir MaxStack_loader.ms).
+>>"%installfile%" echo fn safeCopyLoader src dst = (
+>>"%installfile%" echo     if doesFileExist src then (
+>>"%installfile%" echo         local dstDir = getFilenamePath dst
+>>"%installfile%" echo         if not doesFileExist dstDir then makeDir dstDir
+>>"%installfile%" echo         if safeCopy src dst then (
+>>"%installfile%" echo             true -- pas verrouille, copie directe reussie
+>>"%installfile%" echo         ) else (
+>>"%installfile%" echo             local pendingFile = dst + ".new"
+>>"%installfile%" echo             if doesFileExist pendingFile then deleteFile pendingFile
+>>"%installfile%" echo             (dotNetClass "System.IO.File").Copy src pendingFile
+>>"%installfile%" echo             format "loader verrouille, mise a jour differee via %%\n" pendingFile
+>>"%installfile%" echo             false
+>>"%installfile%" echo         )
+>>"%installfile%" echo     ) else (
+>>"%installfile%" echo         format "WARNING: not found: %%\n" src
+>>"%installfile%" echo         false
+>>"%installfile%" echo     )
+>>"%installfile%" echo )
+>>"%installfile%" echo.
+>>"%installfile%" echo safeCopy (tempDir + "MaxStack.mnx")        maxstackMNXPath
+>>"%installfile%" echo local loaderUpdatedNow = safeCopyLoader (tempDir + "MaxStack_loader.ms")  maxstackLoaderPath
 >>"%installfile%" echo safeCopy (tempDir + "version.txt")         maxstackVersionPath
 >>"%installfile%" echo.
 >>"%installfile%" echo -- -----------------------------------------------
@@ -157,16 +189,24 @@ for %%F in ("%srcdir%\*") do (
 >>"%installfile%" echo -- -----------------------------------------------
 >>"%installfile%" echo -- Rechargement du Menu (3ds Max 2025+)
 >>"%installfile%" echo -- -----------------------------------------------
->>"%installfile%" echo try (
->>"%installfile%" echo     -- On execute le loader qui vient d'etre installe pour inscrire la variable d'environnement
->>"%installfile%" echo     fileIn maxstackLoaderPath
->>"%installfile%" echo     print "Menu MaxStack charge avec succes !"
->>"%installfile%" echo ) catch (
->>"%installfile%" echo     format "Erreur lors du chargement du menu : %%\n" (getCurrentException())
+>>"%installfile%" echo if loaderUpdatedNow then (
+>>"%installfile%" echo     try (
+>>"%installfile%" echo         -- On execute le loader qui vient d'etre installe pour inscrire la variable d'environnement
+>>"%installfile%" echo         fileIn maxstackLoaderPath
+>>"%installfile%" echo         print "Menu MaxStack charge avec succes !"
+>>"%installfile%" echo     ) catch (
+>>"%installfile%" echo         format "Erreur lors du chargement du menu : %%\n" (getCurrentException())
+>>"%installfile%" echo     )
+>>"%installfile%" echo ) else (
+>>"%installfile%" echo     print "Loader verrouille : la mise a jour du menu sera appliquee au prochain lancement de 3ds Max."
 >>"%installfile%" echo )
 >>"%installfile%" echo.
 >>"%installfile%" echo print "Installation terminée."
->>"%installfile%" echo messageBox "MaxStack v%currentver% installée avec succès !\n\nLe menu a été mis à jour."
+>>"%installfile%" echo if loaderUpdatedNow then (
+>>"%installfile%" echo     messageBox "MaxStack v%currentver% installée avec succès !\n\nLe menu a été mis à jour."
+>>"%installfile%" echo ) else (
+>>"%installfile%" echo     messageBox "MaxStack v%currentver% installée !\n\nRedemarrez 3ds Max pour finaliser la mise a jour du menu."
+>>"%installfile%" echo )
 >>"%installfile%" echo print "-- END --"
 
 echo install_scripts.ms generated.
