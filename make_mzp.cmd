@@ -137,7 +137,7 @@ set "installfile=%outdir%\install_scripts.ms"
 >>"%installfile%" echo )
 >>"%installfile%" echo.
 >>"%installfile%" echo safeCopy (tempDir + "MaxStack.mnx")        maxstackMNXPath
->>"%installfile%" echo local loaderUpdatedNow = safeCopyLoader (tempDir + "MaxStack_loader.ms")  maxstackLoaderPath
+>>"%installfile%" echo loaderUpdatedNow = safeCopyLoader (tempDir + "MaxStack_loader.ms")  maxstackLoaderPath
 >>"%installfile%" echo safeCopy (tempDir + "version.txt")         maxstackVersionPath
 >>"%installfile%" echo.
 >>"%installfile%" echo -- -----------------------------------------------
